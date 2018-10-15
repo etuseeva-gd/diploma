@@ -150,7 +150,5 @@ def create_cnn(input,
                                       num_outputs=num_classes,
                                       use_relu=False)
 
-    return {
-        y: tf.nn.softmax(second_fc_layer, name='y'),
-        final_layer: second_fc_layer
-    }
+    y = tf.nn.softmax(second_fc_layer, name="y_pred")
+    return y, second_fc_layer

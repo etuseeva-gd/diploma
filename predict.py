@@ -10,7 +10,8 @@ import argparse
 # ----------
 image_size = 128
 num_channels = 3
-model_name = 'tf-name.meta'
+model_name = 'model/model.meta'
+model_name_2 = 'model/'
 
 # ПОДГОТОВКА ВХОДНЫХ ДАННЫХ
 # ----------
@@ -39,7 +40,7 @@ session = tf.Session()
 
 # Загружаем/восстанавливаем сохраненную обученную модель
 saver = tf.train.import_meta_graph(model_name)
-saver.restore(session, tf.train.latest_checkpoint('./'))
+saver.restore(session, tf.train.latest_checkpoint(model_name_2))
 
 graph = tf.get_default_graph()
 

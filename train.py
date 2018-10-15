@@ -15,7 +15,7 @@ set_random_seed(2)
 
 # КОНСТАНТЫ
 # ----------
-batch_size = 32
+batch_size = 10
 
 validation_size = 0.2  # 20% данных будет также использовано для валидации
 img_size = 128
@@ -24,9 +24,9 @@ train_path = 'training_data'
 
 learning_rate = 1e-4
 
-num_iteration = 3000  # Количество итераций обучения
+num_iteration = 100  # Количество итераций обучения
 
-model_name = 'tf-name'
+model_name = 'model/model'
 
 # ВХОДНЫЕ ДАННЫЕ
 # ----------
@@ -91,7 +91,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 session.run(tf.global_variables_initializer())
 
 # Определяем saver. Необходим нам для того, чтобы мы в дальнейшем смогли восстановить нашу модель.
-saver = tf.train.Saver()
+saver = tf.train.Saver(save_relative_paths=True)
 
 
 def show_progress(epoch, feed_dict_train, feed_dict_validate, val_loss):
@@ -115,11 +115,9 @@ def train(num_iteration):
 
     for i in range(total_iterations,
                    total_iterations + num_iteration):
-
         x_batch, y_true_batch, _, cls_batch = data.train.next_batch(batch_size)
         feed_dict_tr = {x: x_batch,
                         y_true: y_true_batch}
-        print(feed_dict_tr)
 
         session.run(optimizer, feed_dict=feed_dict_tr)
 
@@ -128,7 +126,6 @@ def train(num_iteration):
                 batch_size)
             feed_dict_val = {x: x_valid_batch,
                              y_true: y_valid_batch}
-            print(feed_dict_val)
 
             val_loss = session.run(cost, feed_dict=feed_dict_val)
             epoch = int(i / int(data.train.num_examples / batch_size))
