@@ -5,13 +5,7 @@ import glob
 import cv2
 import sys
 import argparse
-
-# КОНСТАНТЫ
-# ----------
-image_size = 128
-num_channels = 3
-model_name = 'model/model.meta'
-model_name_2 = 'model/'
+import config
 
 # ПОДГОТОВКА ВХОДНЫХ ДАННЫХ
 # ----------
@@ -22,7 +16,7 @@ filename = dir_path + '/' + image_path
 
 # Считываем изображение, которое необходимо распознать
 image = cv2.imread(filename)
-image = cv2.resize(image, (image_size, image_size), 0, 0, cv2.INTER_LINEAR)
+image = cv2.resize(image, (config.image_size, config.image_size), 0, 0, cv2.INTER_LINEAR)
 
 # Ввиду того, что вход НС имеет вид [None image_size image_size num_channels]
 # мы преобразуем наши данные к нужной форме
@@ -31,16 +25,15 @@ images.append(image)
 images = np.array(images, dtype=np.uint8)
 images = images.astype('float32')
 images = np.multiply(images, 1.0 / 255.0)
-x_batch = images.reshape(1, image_size, image_size, num_channels)
+x_batch = images.reshape(1, config.image_size, config.image_size, config.num_channels)
 
 session = tf.Session()
 
 # ВОССТАНОВЛЕНИЕ МОДЕЛИ
 # ----------
-
 # Загружаем/восстанавливаем сохраненную обученную модель
-saver = tf.train.import_meta_graph(model_name)
-saver.restore(session, tf.train.latest_checkpoint(model_name_2))
+saver = tf.train.import_meta_graph(config.model_dir + config.model_name + '.meta')
+saver.restore(session, tf.train.latest_checkpoint(config.model_dir))
 
 graph = tf.get_default_graph()
 
@@ -58,5 +51,8 @@ result = session.run(y_pred, feed_dict=feed_dict_testing)
 
 print('Полученный результат:')
 print(result)
+
+classes = os.listdir(config.train_path)
+print(classes)
 
 print('Конец')
