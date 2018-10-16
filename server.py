@@ -1,33 +1,65 @@
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from optparse import OptionParser
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse
+import json
+
+import predict
+import train
+import config
+
+def handlePost(selt):
+    path = self.path
+    if path == '/setup_config':
+        print('setup config')
+    elif path == '/train':
+        print('train')
+    elif path == '/predict':
+        print('predict')
+    return {}
+
+
+def handleGet():
+    return {}
 
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        request_path = self.path
+        handlePost(self)
+        
+        parsed_path = urlparse(self.path)
         self.send_response(200)
-        self.send_header("Set-Cookie", "foo=bar")
+        self.end_headers()
+        self.wfile.write(json.dumps({
+            'method': self.command,
+            'path': self.path,
+            'real_path': parsed_path.query,
+            'query': parsed_path.query,
+            'request_version': self.request_version,
+            'protocol_version': self.protocol_version
+        }).encode())
+
+        return
 
     def do_POST(self):
-        request_path = self.path
-        request_headers = self.headers
-        content_length = request_headers.getheaders('content-length')
-        length = int(content_length[0]) if content_length else 0
+        content_len = int(self.headers.getheader('content-length'))
+        post_body = self.rfile.read(content_len)
+        data = json.loads(post_body)
+
+        parsed_path = urlparse(self.path)
         self.send_response(200)
+        self.end_headers()
+        self.wfile.write(json.dumps({
+            'method': self.command,
+            'path': self.path,
+            'real_path': parsed_path.query,
+            'query': parsed_path.query,
+            'request_version': self.request_version,
+            'protocol_version': self.protocol_version,
+            'body': data
+        }).encode())
+        return
 
-    do_PUT = do_POST
-    do_DELETE = do_GET
 
-
-def main():
-    port = 8080
-    print('Сервер запущен на - %s' % port)
-    server = HTTPServer(('', port), RequestHandler)
+if __name__ == '__main__':
+    server = HTTPServer(('localhost', 8000), RequestHandler)
+    print('Сервер запущен на - http://localhost:8000')
     server.serve_forever()
-
-
-if __name__ == "__main__":
-    parser = OptionParser()
-    (options, args) = parser.parse_args()
-
-    main()
