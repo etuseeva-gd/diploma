@@ -1,0 +1,14 @@
+<h3>Введите нужные параметры</h3>
+
+<form *ngIf="param" autocomplete="off" (ngSubmit)="predict()">
+  <mat-form-field>
+    <input matInput
+           placeholder="Путь до изображения"
+           [(ngModel)]="param.url"
+           name="url">
+  </mat-form-field>
+
+  <button mat-raised-button>Распознать</button>
+</form>
+
+{{param | json}}
