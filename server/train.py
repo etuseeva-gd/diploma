@@ -136,9 +136,13 @@ def prepare_model(num_classes, data):
     print('Обучение завершено')
 
 
-if __name__ == '__main__':
+def init():
     # Считываем данные
     num_classes, data = prepare_data()
 
     # Определяем модель
     prepare_model(num_classes, data)
+
+
+if __name__ == '__main__':
+    init()

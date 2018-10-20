@@ -9,6 +9,8 @@ import config
 
 # @todo сделать чтобы было несколько изображений
 # подумать над тем, чтобы разбить файлик
+
+
 def predict(x_batch):
     session = tf.Session()
 
@@ -32,10 +34,11 @@ def predict(x_batch):
     # ПРЕДСКАЗАНИЕ
     # ----------
     feed_dict_testing = {x: x_batch, y_true: y_test_images}
-    
+
     return session.run(y_pred, feed_dict=feed_dict_testing)
 
-if __name__ == '__main__':
+
+def init():
     # ПОДГОТОВКА ВХОДНЫХ ДАННЫХ
     # ----------
     # Получаем данные о местоположении файла
@@ -57,7 +60,11 @@ if __name__ == '__main__':
     images = np.multiply(images, 1.0 / 255.0)
     x_batch = images.reshape(1, config.image_size,
                              config.image_size, config.num_channels)
-   
+
     print('Полученный результат:')
     result = predict(x_batch)
     print(result)
+
+
+if __name__ == '__main__':
+    init()

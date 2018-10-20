@@ -6,15 +6,36 @@ import predict
 import train
 import config
 
+def handlePredict(body):
+    print('predict')
+
+    # Нужно подумать что передать 
+    predict.predict()
+
+def handleTrain(body):
+    print('train')
+
+    # Нужно подумать что передать 
+    train.train()
+
+def handleSaveSettings(body):
+    print('save settings')
+
 
 def handlePost(self):
     path = self.path
-    if path == '/setup_config':
-        print('setup config')
+
+    # Переданные параметры 
+    content_len = int(self.headers.getheader('content-length'))
+    post_body = self.rfile.read(content_len)
+    body = json.loads(post_body)
+
+    if path == '/save_settings':
+        handleSaveSettings(body)
     elif path == '/train':
-        print('train')
+        handleTrain(body)
     elif path == '/predict':
-        print('predict')
+        handlePredict(body)
     return {}
 
 
