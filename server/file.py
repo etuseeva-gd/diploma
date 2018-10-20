@@ -1,6 +1,6 @@
 class File:
     @staticmethod
-    def read_file(path):
+    def read(path):
         file = open(path, 'r')
         lines = file.readlines()
         file.close()
@@ -14,7 +14,7 @@ class File:
         # return ''
 
     @staticmethod
-    def write_file(path, data):
+    def write(path, data):
         # Открываем файл в который собираемся записать данные,
         # если его нет, то создать его
         file = open(path, 'w+')

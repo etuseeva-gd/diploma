@@ -10,13 +10,13 @@ def handlePredict(body):
     print('predict')
 
     # Нужно подумать что передать 
-    predict.predict()
+    predict.init()
 
 def handleTrain(body):
     print('train')
 
     # Нужно подумать что передать 
-    train.train()
+    train.init()
 
 def handleSaveSettings(body):
     print('save settings')
