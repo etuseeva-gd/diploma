@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {TrainSettings} from '../../models/settings.model';
 import {ApiService} from '../../services/api.service';
+import {TrainParams} from '../../models/params';
 
 @Component({
   selector: 'app-train',
@@ -8,17 +8,17 @@ import {ApiService} from '../../services/api.service';
   styleUrls: ['./train.component.scss']
 })
 export class TrainComponent implements OnInit {
-  private settings: TrainSettings;
+  private params: TrainParams;
 
   constructor(private apiService: ApiService) {
   }
 
   ngOnInit() {
-    this.settings = new TrainSettings();
+    this.params = new TrainParams();
   }
 
   train() {
-    this.apiService.train(this.settings);
+    this.apiService.train(this.params);
   }
 
 }

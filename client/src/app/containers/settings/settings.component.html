@@ -1,50 +1,50 @@
 <h4>Настройки</h4>
 <h5>P.S. Данные настройки нужны исключительно для работы сервера</h5>
 
-<form *ngIf="settings" autocomplete="off" (ngSubmit)="saveSettings()">
+<form *ngIf="params" autocomplete="off" (ngSubmit)="saveSettings()">
   <mat-form-field>
     <input matInput
            placeholder="Размер изображения"
-           [(ngModel)]="settings.imageSize"
+           [(ngModel)]="params.imageSize"
            name="imageSize">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Число каналов (?)"
-           [(ngModel)]="settings.numChannels"
+           [(ngModel)]="params.numChannels"
            name="numChannels">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Путь до папки с тренировочными данными"
-           [(ngModel)]="settings.trainingPath"
+           [(ngModel)]="params.trainingPath"
            name="trainingPath">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Пусть до папки с тест файлами"
-           [(ngModel)]="settings.testingPath"
+           [(ngModel)]="params.testingPath"
            name="testingPath">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Путь до папки с моделью"
-           [(ngModel)]="settings.modelDir"
+           [(ngModel)]="params.modelDir"
            name="modelDir">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Имя модели (после тренировки)"
-           [(ngModel)]="settings.modelName"
+           [(ngModel)]="params.modelName"
            name="modelName">
   </mat-form-field>
 
   <button mat-raised-button>Сохранить настройки</button>
 </form>
 
-{{settings | json}}
+{{params | json}}

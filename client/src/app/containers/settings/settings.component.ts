@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {BaseSettings} from '../../models/settings.model';
 import {ApiService} from '../../services/api.service';
+import {BaseParams} from '../../models/params';
 
 @Component({
   selector: 'app-settings',
@@ -11,17 +11,17 @@ export class SettingsComponent implements OnInit {
   /**
    * Тут хранятся базовые параметры системы.
    */
-  private settings: BaseSettings;
+  private params: BaseParams;
 
   constructor(private apiService: ApiService) {
   }
 
   ngOnInit() {
-    this.settings = new BaseSettings();
+    this.params = new BaseParams();
   }
 
   saveSettings() {
-    this.apiService.saveSettings(this.settings);
+    this.apiService.saveSettings(this.params);
   }
 
 }

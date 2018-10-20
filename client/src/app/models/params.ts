@@ -1,4 +1,4 @@
-export class BaseSettings {
+export class BaseParams {
   imageSize: number; // 128
   numChannels: number; // 3
 
@@ -25,7 +25,7 @@ export class BaseSettings {
   }
 }
 
-export class TrainSettings {
+export class TrainParams {
   learningRate: number | string; // '1e-4'
   numIteration: number; // 1000
 
@@ -38,25 +38,25 @@ export class TrainSettings {
   }
 }
 
-export class NetworkSettings {
+export class NetworkParams {
   // Количество conv слоев
   numConvLayers: number;
-  convLayersParams: ConvLayerSettings[];
+  convLayersParams: ConvLayerParams[];
 
   // Количество flat слоев
   numFlatLayers: number;
-  flatLayerParams: LayerSettings[];
+  flatLayerParams: LayerParams[];
 
   // Количество fc слоев
   numFCLayers: number;
-  fcLayerParams: FCLayerSettings[];
+  fcLayerParams: FCLayerParams[];
 
   constructor() {
     this.numConvLayers = 3;
     this.convLayersParams = [
-      new ConvLayerSettings(3, 32),
-      new ConvLayerSettings(3, 32),
-      new ConvLayerSettings(3, 64)
+      new ConvLayerParams(3, 32),
+      new ConvLayerParams(3, 32),
+      new ConvLayerParams(3, 64)
     ];
 
     // Количество flat слоев
@@ -66,7 +66,7 @@ export class NetworkSettings {
     // Количество fc слоев
     this.numFCLayers = 2;
     this.fcLayerParams = [
-      new FCLayerSettings(128)
+      new FCLayerParams(128)
     ];
   }
 }
@@ -74,10 +74,10 @@ export class NetworkSettings {
 /**
  * Настройки для абстрактного слоя.
  */
-export class LayerSettings {
+export class LayerParams {
 }
 
-export class ConvLayerSettings extends LayerSettings {
+export class ConvLayerParams extends LayerParams {
   filterSize: number;
   numFilters: number;
 
@@ -89,13 +89,21 @@ export class ConvLayerSettings extends LayerSettings {
   }
 }
 
-export class FCLayerSettings extends LayerSettings {
+export class FCLayerParams extends LayerParams {
   size: number;
 
   constructor(size) {
     super();
 
     this.size = size || null;
+  }
+}
+
+export class PredictParams {
+  url: string;
+
+  constructor(url?) {
+    this.url = url || '';
   }
 }
 
