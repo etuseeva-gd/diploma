@@ -6,7 +6,8 @@ import predict
 import train
 import config
 
-def handlePost(selt):
+
+def handlePost(self):
     path = self.path
     if path == '/setup_config':
         print('setup config')
@@ -24,7 +25,7 @@ def handleGet():
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         handlePost(self)
-        
+
         parsed_path = urlparse(self.path)
         self.send_response(200)
         self.end_headers()
