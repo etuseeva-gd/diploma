@@ -6,13 +6,6 @@ import numpy as np
 
 
 def load_train(train_path, image_size, classes):
-    """
-    Загружаем данные.
-
-    @param {} train_path
-    @param {} image_size
-    @param {} classes - Список классов, которым будем учить 
-    """
     images = []
     labels = []
     img_names = []

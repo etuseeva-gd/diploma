@@ -40,8 +40,7 @@ def create_max_pooling_layer(input, k=2):
 
 
 def reshape_layer(layer):
-    # return tf.reshape(layer, [-1, layer.get_shape()[1:4].num_elements()])
-    return tf.reshape(layer, [-1, layer.get_shape().as_list()[0]])
+    return tf.reshape(layer, [-1, layer.get_shape()[1:4].num_elements()])
 
 
 def create_fc_layer(input,

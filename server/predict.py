@@ -28,12 +28,14 @@ def predict(x_batch):
 
     # Передаем данные сети на вход
     x = graph.get_tensor_by_name("x:0")
-    y_true = graph.get_tensor_by_name("y_true:0")
-    y_test_images = np.zeros((1, len(os.listdir(config.train_path))))
+    y = graph.get_tensor_by_name("y:0")
+
+    classes = len(os.listdir(config.train_path))
+    y_test_images = np.zeros((1, classes))
 
     # ПРЕДСКАЗАНИЕ
     # ----------
-    feed_dict_testing = {x: x_batch, y_true: y_test_images}
+    feed_dict_testing = {x: x_batch, y: y_test_images}
 
     return session.run(y_pred, feed_dict=feed_dict_testing)
 

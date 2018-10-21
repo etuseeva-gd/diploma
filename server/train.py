@@ -37,6 +37,7 @@ def prepare_data():
 
     return num_classes, data
 
+total_iterations = 0
 
 def prepare_model(num_classes, data):
     # МОДЕЛЬ
@@ -53,90 +54,80 @@ def prepare_model(num_classes, data):
                        name='x')
 
     # Опеределяем выход НС
-    y_true = tf.placeholder(tf.float32,
-                            shape=[None, num_classes],
-                            name='y_true')
-    y_true_cls = tf.argmax(y_true, dimension=1)
+    y = tf.placeholder(tf.float32,
+                       shape=[None, num_classes],
+                       name='y')
 
-    # Определяем сверточную НС  
+    # Определяем сверточную НС
     # и получаем последний слой сети
     y_pred, final_layer = cnn.create_cnn(input=x,
                                          num_channels=config.num_channels,
                                          num_classes=num_classes)
-    y_pred_cls = tf.argmax(y_pred, dimension=1)
 
-    session.run(tf.global_variables_initializer())
+    # session.run(tf.global_variables_initializer())
 
     # ОБУЧЕНИЕ
     # ----------
     print('Подговка перед обучением')
 
+    # -----------------------
     # Получаем cross entropy (перекрестную энропию)
     # Необходима для того, чтобы при обучении охаратеризовать насколько система
     # была права или нет при классификации того или иного обьекта
     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=final_layer,
-                                                            labels=y_true)
+                                                            labels=y)
     # Разность между полученным и ожидаемым значениями
     cost = tf.reduce_mean(cross_entropy)
     # Оптимизатор
     optimizer = tf.train.AdamOptimizer(
         learning_rate=config.learning_rate).minimize(cost)
+    # -----------------------
 
     # Точность операции
-    correct_prediction = tf.equal(y_pred_cls, y_true_cls)
+    # -----------------------
+    # Здесь вы проверяете, равен ли индекс максимального значения прогнозируемого
+    # изображения фактическому помеченному изображению. Оба будут вектор-столбцом.
+    correct_prediction = tf.equal(
+        tf.argmax(y_pred, dimension=1),
+        tf.argmax(y, dimension=1)
+    )
+    # Вычислить точность по всем заданным изображениям и усреднить их
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    # -----------------------
 
     session.run(tf.global_variables_initializer())
 
     # Определяем saver. Необходим нам для того, чтобы мы в дальнейшем смогли восстановить нашу модель.
     saver = tf.train.Saver(save_relative_paths=True)
 
-    def show_progress(epoch, feed_dict_train, feed_dict_validate, val_loss):
-        """
-            Вывести прогресс обучения.
-
-            @param epoch - эпоха
-            @param feed_dict_train
-            @param feed_dict_validate
-            @param val_loss
-        """
-
-        acc = session.run(accuracy, feed_dict=feed_dict_train)
-        val_acc = session.run(accuracy, feed_dict=feed_dict_validate)
-        msg = "Эпоха {0} --- Точность обучения: {1:>6.1%}, Точность проверки: {2:>6.1%},  Потеря: {3:.3f}"
-        print(msg.format(epoch + 1, acc, val_acc, val_loss))
-
-    def train(num_iteration):
-        total_iterations = 0
-
-        for i in range(total_iterations,
-                       total_iterations + num_iteration):
-            x_batch, y_true_batch, _, cls_batch = data.train.next_batch(
-                config.batch_size)
-            feed_dict_tr = {x: x_batch,
-                            y_true: y_true_batch}
-
-            session.run(optimizer, feed_dict=feed_dict_tr)
-
-            if i % int(data.train.num_examples / config.batch_size) == 0:
-                x_valid_batch, y_valid_batch, _, valid_cls_batch = data.valid.next_batch(
-                    config.batch_size)
-                feed_dict_val = {x: x_valid_batch,
-                                 y_true: y_valid_batch}
-
-                val_loss = session.run(cost, feed_dict=feed_dict_val)
-                epoch = int(
-                    i / int(data.train.num_examples / config.batch_size))
-
-                show_progress(epoch, feed_dict_tr, feed_dict_val, val_loss)
-
-                # Запоминаем полученную модель
-                saver.save(session, config.model_dir + config.model_name)
-
-        total_iterations += num_iteration
-
     print('Начали обучение')
-    train(num_iteration=config.num_iteration)
+
+    global total_iterations
+    for i in range(total_iterations,
+                   total_iterations + config.num_iteration):
+        x_batch, y_batch, _, cls_batch = data.train.next_batch(
+            config.batch_size)        
+        feed_dict_tr = {x: x_batch, y: y_batch}
+
+        session.run(optimizer, feed_dict=feed_dict_tr)
+
+        if i % int(data.train.num_examples/config.batch_size) == 0:
+            x_valid_batch, y_valid_batch, _, valid_cls_batch = data.valid.next_batch(
+            config.batch_size)
+            feed_dict_val = {x: x_valid_batch, y: y_valid_batch}
+
+            val_loss = session.run(cost, feed_dict=feed_dict_val)
+            epoch = int(i / int(data.train.num_examples/config.batch_size))
+
+            acc = session.run(accuracy, feed_dict=feed_dict_tr)
+            val_acc = session.run(accuracy, feed_dict=feed_dict_val)
+            msg = "Training Epoch {0} --- Training Accuracy: {1:>6.1%}, Validation Accuracy: {2:>6.1%},  Validation Loss: {3:.3f}"
+            print(msg.format(epoch + 1, acc, val_acc, val_loss))
+
+            saver.save(session, config.model_dir + config.model_name)
+
+    total_iterations += config.num_iteration
+
     print('Обучение завершено')
 
 

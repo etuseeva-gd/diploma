@@ -14,8 +14,8 @@ image_width = 128
 num_channels = 3
 
 # Параметры, от которых меняется скорость, качество и тд обучения
-learning_rate = 1e-4
-num_iteration = 1000 
-batch_size = 10
+learning_rate = 1e-3
+num_iteration = 100
+batch_size = 32
 
 validation_size = 0.2  # 20% данных будет также использовано для валидации
