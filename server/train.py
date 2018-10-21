@@ -21,6 +21,7 @@ def prepare_data():
     # Подготавливаем входные данные
     print('Подготовка входных данных')
 
+    # Классы и их количество, которые хотим в дальнейшмем будем распознавать (пример: 'Цветок', 'Машина')
     classes = os.listdir(config.train_path)
     num_classes = len(classes)
 
@@ -45,16 +46,20 @@ def prepare_model(num_classes, data):
     # Создаем session (сессию)
     session = tf.Session()
 
+    # Задаем вход НС
     x = tf.placeholder(tf.float32,
-                       shape=[None, config.image_size,
-                              config.image_size, config.num_channels],
+                       shape=[None, config.image_height,
+                              config.image_width, config.num_channels],
                        name='x')
 
-    y_true = tf.placeholder(
-        tf.float32, shape=[None, num_classes], name='y_true')
+    # Опеределяем выход НС
+    y_true = tf.placeholder(tf.float32,
+                            shape=[None, num_classes],
+                            name='y_true')
     y_true_cls = tf.argmax(y_true, dimension=1)
 
-    # Получаем последний слой сети
+    # Определяем сверточную НС  
+    # и получаем последний слой сети
     y_pred, final_layer = cnn.create_cnn(input=x,
                                          num_channels=config.num_channels,
                                          num_classes=num_classes)
@@ -73,7 +78,6 @@ def prepare_model(num_classes, data):
                                                             labels=y_true)
     # Разность между полученным и ожидаемым значениями
     cost = tf.reduce_mean(cross_entropy)
-
     # Оптимизатор
     optimizer = tf.train.AdamOptimizer(
         learning_rate=config.learning_rate).minimize(cost)
