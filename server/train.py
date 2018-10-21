@@ -15,25 +15,7 @@ seed(1)
 set_random_seed(2)
 
 
-def init():
-    # ВХОДНЫЕ ДАННЫЕ
-    # ----------
-    # Подготавливаем входные данные
-    # Классы и их количество, которые хотим в дальнейшмем будем распознавать (пример: 'Цветок', 'Машина')
-    classes = os.listdir(config.train_path)
-    num_classes = len(classes)
-
-    # Подгружаем входные данные для тренировки сети
-    data = read_train_sets(
-        config.train_path,
-        config.image_size,
-        classes,
-        test_size=config.test_size
-    )
-
-    print("Тренировочные данные: {}".format(len(data.train.labels)))
-    print("Проверочные данные: {}".format(len(data.test.labels)))
-
+def train(num_classes, data):
     # МОДЕЛЬ
     # ----------
     # Создаем session (сессию)
@@ -141,5 +123,27 @@ def init():
             saver.save(session, config.model_dir + config.model_name)
 
 
+def console_train():
+    # ВХОДНЫЕ ДАННЫЕ
+    # ----------
+    # Подготавливаем входные данные
+    # Классы и их количество, которые хотим в дальнейшмем будем распознавать (пример: 'Цветок', 'Машина')
+    classes = os.listdir(config.train_path)
+    num_classes = len(classes)
+
+    # Подгружаем входные данные для тренировки сети
+    data = read_train_sets(
+        config.train_path,
+        config.image_size,
+        classes,
+        test_size=config.test_size
+    )
+
+    print("Тренировочные данные: {}".format(len(data.train.labels)))
+    print("Проверочные данные: {}".format(len(data.test.labels)))
+
+    train(num_classes, data)
+
+
 if __name__ == '__main__':
-    init()
+    console_train()

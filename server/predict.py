@@ -9,7 +9,7 @@ import config
 from myutils import read_image
 
 
-def predict(x_batch, classes):
+def predict(x_batch):
     session = tf.Session()
 
     # ВОССТАНОВЛЕНИЕ МОДЕЛИ
@@ -29,16 +29,21 @@ def predict(x_batch, classes):
     x = graph.get_tensor_by_name("x:0")
     y = graph.get_tensor_by_name("y:0")
 
-    y_test_images = np.zeros((1, classes))
+    # Узнаем сколько/каких классов нужно нам распознать
+    classes = os.listdir(config.train_path)
+
+    y_test_images = np.zeros((1, len(classes)))
 
     # ПРЕДСКАЗАНИЕ
     # ----------
     feed_dict_test = {x: x_batch, y: y_test_images}
+    result = session.run(y_pred, feed_dict=feed_dict_test)
 
-    return session.run(y_pred, feed_dict=feed_dict_test)
+    # Возвращаем какой класс и какая вертоятность что это он
+    return classes[np.argmax(result)], np.amax(result) * 100
 
 
-def init():
+def console_prediction():
     # ПОДГОТОВКА ВХОДНЫХ ДАННЫХ
     # ----------
     # Получаем данные о местоположении файла
@@ -58,15 +63,18 @@ def init():
         config.num_channels
     )
 
-    classes = os.listdir(config.train_path)
-    num_classes = len(classes)
+    cls, probability = predict(x_batch)
+    print('Это {0} на {1}%'.format(cls, probability))
 
-    # Получили результат
-    result = predict(x_batch, num_classes)
 
-    print(result)
-    print('Это {0} на {1}%'.format(classes[np.argmax(result)], np.amax(result) * 100))
+def web_prediction(image_url):
+    print('web_prediction = ' + image_url)
+    # Распознавание данных переданных по сети
+
+    # @todo считать и преобразовать данные, которые скачаны из сети
+    # cls, probability = predict(x_batch)
+    # print('Это {0} на {1}%'.format(cls, probability))
 
 
 if __name__ == '__main__':
-    init()
+    console_prediction()

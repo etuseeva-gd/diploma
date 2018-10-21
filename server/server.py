@@ -6,40 +6,67 @@ import predict
 import train
 import config
 
-def handlePredict(body):
-    print('predict')
 
-    # Нужно подумать что передать 
-    predict.init()
+def handlePOSTPredict(body):
+    # Обрабатываем запрос на обучение некоторого изображения
+    predict.web_prediction('some_url')
 
-def handleTrain(body):
-    print('train')
 
-    # Нужно подумать что передать 
-    train.init()
+def handlePOSTTrain(body):
+    # Обрабатываем запрос на обучение некоторого изображения    
+    # Подумать над web_train
+    train.console_train()
 
-def handleSaveSettings(body):
+
+def handlePOSTSaveBaseSettings(body):
+    # Обрабатывает запрос на сохранение базовых настроек
     print('save settings')
+
+
+def handlePOSTSaveNNSettings(body):
+    # Обрабатывает запрос на сохранение настроек нейронной сети
+    print('save nn settings')
+
+
+def handleGETBaseSettings():
+    print('get base settings')
+
+
+def handleGetNNSettings():
+    print('get nn settings')
+
+
+def handleGetTrainStatus():
+    print('get train status')
 
 
 def handlePost(self):
     path = self.path
 
-    # Переданные параметры 
+    # Переданные параметры
     content_len = int(self.headers.getheader('content-length'))
     post_body = self.rfile.read(content_len)
     body = json.loads(post_body)
 
-    if path == '/save_settings':
-        handleSaveSettings(body)
+    if path == '/save_base_settings':
+        handlePOSTSaveBaseSettings(body)
+    elif path == '/save_nn_settings':
+        handlePOSTSaveNNSettings(body)
     elif path == '/train':
-        handleTrain(body)
+        handlePOSTTrain(body)
     elif path == '/predict':
-        handlePredict(body)
+        handlePOSTPredict(body)
     return {}
 
 
-def handleGet():
+def handleGet(self):
+     path = self.path
+    if path == '/get_base_settings':
+        handleGETBaseSettings()
+    elif path == '/get_nn_settings':
+        handleGetNNSettings()
+    elif path == '/get_train_status':
+        handleGetTrainStatus()
     return {}
 
 
