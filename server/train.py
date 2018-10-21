@@ -14,8 +14,6 @@ from tensorflow import set_random_seed
 seed(1)
 set_random_seed(2)
 
-total_iterations = 0
-
 
 def init():
     # ВХОДНЫЕ ДАННЫЕ
@@ -30,12 +28,12 @@ def init():
         config.train_path,
         config.image_size,
         classes,
-        validation_size=config.validation_size
+        test_size=config.test_size
     )
 
     print("Завершили считывание входнных данных")
     print("Количество тренировочных данных:\t\t{}".format(len(data.train.labels)))
-    print("Количество проверочных данных:\t{}".format(len(data.valid.labels)))
+    print("Количество проверочных данных:\t{}".format(len(data.test.labels)))
 
     # МОДЕЛЬ
     # ----------
@@ -93,38 +91,32 @@ def init():
     # Определяем saver. Необходим нам для того, чтобы мы в дальнейшем смогли восстановить нашу модель.
     saver = tf.train.Saver(save_relative_paths=True)
 
-    global total_iterations
-    for i in range(total_iterations, total_iterations + config.num_iteration):
-        print(total_iterations)
-        print(i)
-
+    for i in range(config.num_iteration):
         x_batch, y_batch, _, _ = data.train.next_batch(
             config.batch_size
         )
-        feed_dict_tr = {x: x_batch, y: y_batch}
+        feed_dict_train = {x: x_batch, y: y_batch}
+        session.run(optimizer, feed_dict=feed_dict_train)
 
-        session.run(optimizer, feed_dict=feed_dict_tr)
+        num_batch = int(data.train.num_examples/config.batch_size)
+        if i % num_batch == 0:
+            # Определяем что за эпоха, она нарастает
+            epoch = int(i / num_batch)
 
-        if i % int(data.train.num_examples/config.batch_size) == 0:
-             print(data.train.num_examples/config.batch_size)
-             
-            x_valid_batch, y_valid_batch, _, _ = data.valid.next_batch(
+            train_accuracy = session.run(accuracy, feed_dict=feed_dict_train)
+
+            x_test_batch, y_test_batch, _, _ = data.test.next_batch(
                 config.batch_size
             )
-            feed_dict_val = {x: x_valid_batch, y: y_valid_batch}
+            feed_dict_test = {x: x_test_batch, y: y_test_batch}
+            test_accuracy, test_loss = session.run(
+                [accuracy, cost], feed_dict=feed_dict_test)
 
-            val_loss = session.run(cost, feed_dict=feed_dict_val)
-            epoch = int(i / int(data.train.num_examples/config.batch_size))
+            print("Эпоха {0}: Точность обучения = {1:>6.1%}, Точность проверки = {2:>6.1%}, Потеря = {3:.3f}".format(
+                epoch + 1, train_accuracy, test_accuracy, test_loss))
 
-            acc = session.run(accuracy, feed_dict=feed_dict_tr)
-            val_acc = session.run(accuracy, feed_dict=feed_dict_val)
-
-            # Тренировочная эпоха {0} --- Точность обучения: {1:> 6.1%}, Точность проверки: {2:> 6.1%}, Потеря проверки: {3: .3f}
-            msg = "Training Epoch {0} --- Training Accuracy: {1:>6.1%}, Validation Accuracy: {2:>6.1%},  Validation Loss: {3:.3f}"
-            print(msg.format(epoch + 1, acc, val_acc, val_loss))
-
+            # Сохраняем можель после каждой эпохи
             saver.save(session, config.model_dir + config.model_name)
-    total_iterations += config.num_iteration
 
 
 if __name__ == '__main__':
