@@ -21,7 +21,7 @@ export class TrainComponent implements OnInit {
   }
 
   train() {
-    this.trainService.train(this.trainParams, this.nnParams);
+    this.trainService.train(this.trainParams, this.nnParams).subscribe();
   }
 
 }

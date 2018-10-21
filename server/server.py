@@ -18,7 +18,6 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
-
     def handlePOSTPredict(self, body):
         # Обрабатываем запрос на обучение некоторого изображения
         print('handlePOSTPredict')
@@ -27,20 +26,21 @@ class RequestHandler(BaseHTTPRequestHandler):
     def handlePOSTTrain(self, body):
         # Обрабатываем запрос на обучение некоторого изображения
         # Подумать над web_train
-        print('handlePOSTTrain')
+        # Сохраняем праметры тренировки и нейронной сети
+
+        # @todo change to write file
+        with open(train_params_path, 'w') as outfile:
+            json.dump(body['train_params'], outfile)
+
+        with open(nn_params_path, 'w') as outfile:
+            json.dump(body['nn_params'], outfile)
+        # end todo
+
         # train.console_train()
 
     def handlePOSTSaveBaseParams(self, body):
         # Обрабатывает запрос на сохранение базовых настроек
         print('save settings')
-
-    def handlePOSTSaveNNParams(self, body):
-        # Обрабатывает запрос на сохранение настроек нейронной сети
-        print('save nn settings')
-
-    def handlePOSTTrainNNParams(self, body):
-        # Обрабатывает запрос на сохранение настроек нейронной сети
-        print('save nn settings')
 
     def handleGetParams(self, path):
         # @todo chage on read_json
@@ -69,20 +69,17 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.handleGetTrainStatus()
 
     def do_POST(self):
-        path = self.path
+        self.do_OPTIONS()
 
+        path = self.path
         # Переданные параметры
-        content_len = int(self.headers.getheader('content-length'))
+        content_len = int(self.headers['Content-Length'])
         post_body = self.rfile.read(content_len)
         body = json.loads(post_body)
 
         if path == '/save_base_params':
             self.handlePOSTSaveBaseParams(body)
-        elif path == '/save_nn_params':
-            self.handlePOSTSaveNNParams(body)
-        elif path == '/save_train_params':
-            self.handlePOSTTrainNNParams(body)
-        elif path == '/train':
+        elif path == '/train':            
             self.handlePOSTTrain(body)
         elif path == '/predict':
             self.handlePOSTPredict(body)

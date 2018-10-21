@@ -1,15 +1,1 @@
-{
-    "layer_params": [{
-            "filter_size": 3,
-            "num_filters": 32
-        },
-        {
-            "filter_size": 3,
-            "num_filters": 32
-        },
-        {
-            "filter_size": 3,
-            "num_filters": 64
-        }
-    ]
-}
+{"layer_params": [{"filter_size": 3, "num_filters": 32}, {"filter_size": 3, "num_filters": 32}, {"filter_size": 3, "num_filters": 64}]}

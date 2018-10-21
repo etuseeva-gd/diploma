@@ -31,19 +31,11 @@ export class ApiService {
       );
   }
 
-  saveTrainParams(body) {
-    return this.transportService.post('/save_train_params', body);
-  }
-
   getNNParams(): Observable<INNParams> {
     return this.transportService.get('/get_nn_params')
       .pipe(
         map(data => data as INNParams)
       );
-  }
-
-  saveNNParams(body) {
-    return this.transportService.post('/save_nn_params', body);
   }
 
   train(body) {
