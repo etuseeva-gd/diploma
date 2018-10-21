@@ -14,36 +14,31 @@ from tensorflow import set_random_seed
 seed(1)
 set_random_seed(2)
 
+total_iterations = 0
 
-def prepare_data():
+
+def init():
     # ВХОДНЫЕ ДАННЫЕ
     # ----------
     # Подготавливаем входные данные
-    print('Подготовка входных данных')
-
     # Классы и их количество, которые хотим в дальнейшмем будем распознавать (пример: 'Цветок', 'Машина')
     classes = os.listdir(config.train_path)
     num_classes = len(classes)
 
-    print('Начинаем загрузку входных данных')
-
     # Подгружаем входные данные для тренировки сети
     data = dataset.read_train_sets(
-        config.train_path, config.image_size, classes, validation_size=config.validation_size)
+        config.train_path,
+        config.image_size,
+        classes,
+        validation_size=config.validation_size
+    )
 
     print("Завершили считывание входнных данных")
     print("Количество тренировочных данных:\t\t{}".format(len(data.train.labels)))
     print("Количество проверочных данных:\t{}".format(len(data.valid.labels)))
 
-    return num_classes, data
-
-total_iterations = 0
-
-def prepare_model(num_classes, data):
     # МОДЕЛЬ
     # ----------
-    print('Определение модели (нейронной сети)')
-
     # Создаем session (сессию)
     session = tf.Session()
 
@@ -68,8 +63,6 @@ def prepare_model(num_classes, data):
 
     # ОБУЧЕНИЕ
     # ----------
-    print('Подговка перед обучением')
-
     # -----------------------
     # Получаем cross entropy (перекрестную энропию)
     # Необходима для того, чтобы при обучении охаратеризовать насколько система
@@ -100,20 +93,18 @@ def prepare_model(num_classes, data):
     # Определяем saver. Необходим нам для того, чтобы мы в дальнейшем смогли восстановить нашу модель.
     saver = tf.train.Saver(save_relative_paths=True)
 
-    print('Начали обучение')
-
     global total_iterations
-    for i in range(total_iterations,
-                   total_iterations + config.num_iteration):
-        x_batch, y_batch, _, cls_batch = data.train.next_batch(
-            config.batch_size)        
+    for i in range(total_iterations, total_iterations + config.num_iteration):
+        x_batch, y_batch, _, _ = data.train.next_batch(
+            config.batch_size)
         feed_dict_tr = {x: x_batch, y: y_batch}
 
         session.run(optimizer, feed_dict=feed_dict_tr)
 
+        
         if i % int(data.train.num_examples/config.batch_size) == 0:
-            x_valid_batch, y_valid_batch, _, valid_cls_batch = data.valid.next_batch(
-            config.batch_size)
+            x_valid_batch, y_valid_batch, _, _ = data.valid.next_batch(
+                config.batch_size)
             feed_dict_val = {x: x_valid_batch, y: y_valid_batch}
 
             val_loss = session.run(cost, feed_dict=feed_dict_val)
@@ -125,18 +116,7 @@ def prepare_model(num_classes, data):
             print(msg.format(epoch + 1, acc, val_acc, val_loss))
 
             saver.save(session, config.model_dir + config.model_name)
-
     total_iterations += config.num_iteration
-
-    print('Обучение завершено')
-
-
-def init():
-    # Считываем данные
-    num_classes, data = prepare_data()
-
-    # Определяем модель
-    prepare_model(num_classes, data)
 
 
 if __name__ == '__main__':
