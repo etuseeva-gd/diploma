@@ -95,16 +95,22 @@ def init():
 
     global total_iterations
     for i in range(total_iterations, total_iterations + config.num_iteration):
+        print(total_iterations)
+        print(i)
+
         x_batch, y_batch, _, _ = data.train.next_batch(
-            config.batch_size)
+            config.batch_size
+        )
         feed_dict_tr = {x: x_batch, y: y_batch}
 
         session.run(optimizer, feed_dict=feed_dict_tr)
 
-        
         if i % int(data.train.num_examples/config.batch_size) == 0:
+             print(data.train.num_examples/config.batch_size)
+             
             x_valid_batch, y_valid_batch, _, _ = data.valid.next_batch(
-                config.batch_size)
+                config.batch_size
+            )
             feed_dict_val = {x: x_valid_batch, y: y_valid_batch}
 
             val_loss = session.run(cost, feed_dict=feed_dict_val)
@@ -112,6 +118,8 @@ def init():
 
             acc = session.run(accuracy, feed_dict=feed_dict_tr)
             val_acc = session.run(accuracy, feed_dict=feed_dict_val)
+
+            # Тренировочная эпоха {0} --- Точность обучения: {1:> 6.1%}, Точность проверки: {2:> 6.1%}, Потеря проверки: {3: .3f}
             msg = "Training Epoch {0} --- Training Accuracy: {1:>6.1%}, Validation Accuracy: {2:>6.1%},  Validation Loss: {3:.3f}"
             print(msg.format(epoch + 1, acc, val_acc, val_loss))
 
