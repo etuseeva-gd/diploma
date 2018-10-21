@@ -4,21 +4,19 @@ import glob
 from sklearn.utils import shuffle
 import numpy as np
 from dataset import DataSet
+import json
 
 
-def read_file(path):
-    file = open(path, 'r')
-    lines = file.readlines()
+def read_json(path):
+    file = open(path)
+    data = json.load(file)
     file.close()
-    return lines
+    return data
 
 
-def write_file(path, data):
-    # Открываем файл в который собираемся записать данные,
-    # если его нет, то создать его
-    file = open(path, 'w+')
-    file.write(data)
-    file.close()
+def write_json(path, data):
+    with open(path, 'w') as outfile:
+        json.dump(data, outfile)
 
 
 def read_image(file_name, image_size):

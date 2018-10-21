@@ -1,7 +1,6 @@
 ﻿from myutils import read_train_sets
 import tensorflow as tf
 import time
-import config
 from datetime import timedelta
 import math
 import random
@@ -10,12 +9,13 @@ import os
 import cnn
 from numpy.random import seed
 from tensorflow import set_random_seed
+from params import Params
 
 seed(1)
 set_random_seed(2)
 
 
-def train(num_classes, data):
+def train(num_classes, data, params):
     # МОДЕЛЬ
     # ----------
     # Создаем session (сессию)
@@ -23,8 +23,8 @@ def train(num_classes, data):
 
     # Задаем вход НС
     x = tf.placeholder(tf.float32,
-                       shape=[None, config.image_height,
-                              config.image_width, config.num_channels],
+                       shape=[None, params.base_params.image_height,
+                              params.base_params.image_width, params.base_params.num_channels],
                        name='x')
 
     # Опеределяем выход НС
@@ -34,26 +34,12 @@ def train(num_classes, data):
 
     # Определяем сверточную НС
     # и получаем последний слой сети
-    layer_params = [
-        {
-            'filter_size': 3,
-            'num_filters': 32
-        },
-        {
-            'filter_size': 3,
-            'num_filters': 32
-        },
-        {
-            'filter_size': 3,
-            'num_filters': 64
-        }
-    ]
     y_pred, final_layer = cnn.create_cnn(
         input=x,
-        num_channels=config.num_channels,
+        num_channels=params.base_params.num_channels,
         num_classes=num_classes,
-        layer_params=layer_params,
-        image_size=config.image_size
+        layer_params=params.nn_params,
+        image_size=params.base_params.image_size
     )
 
     # session.run(tf.global_variables_initializer())
@@ -72,7 +58,7 @@ def train(num_classes, data):
     cost = tf.reduce_mean(cross_entropy)
     # Оптимизатор
     optimizer = tf.train.AdamOptimizer(
-        learning_rate=config.learning_rate
+        learning_rate=params.train_params.learning_rate
     ).minimize(cost)
     # -----------------------
 
@@ -93,14 +79,14 @@ def train(num_classes, data):
     # Определяем saver. Необходим нам для того, чтобы мы в дальнейшем смогли восстановить нашу модель.
     saver = tf.train.Saver(save_relative_paths=True)
 
-    for i in range(config.num_iteration):
+    for i in range(params.train_params.num_iteration):
         x_batch, y_batch, _, _ = data.train.next_batch(
-            config.batch_size
+            params.train_params.batch_size
         )
         feed_dict_train = {x: x_batch, y: y_batch}
         session.run(optimizer, feed_dict=feed_dict_train)
 
-        num_batch = int(data.train.num_examples/config.batch_size)
+        num_batch = int(data.train.num_examples/params.train_params.batch_size)
         if i % num_batch == 0:
             # Номер эпохи
             epoch = int(i / num_batch)
@@ -108,7 +94,7 @@ def train(num_classes, data):
             train_accuracy = session.run(accuracy, feed_dict=feed_dict_train)
 
             x_test_batch, y_test_batch, _, _ = data.test.next_batch(
-                config.batch_size
+                params.train_params.batch_size
             )
             feed_dict_test = {x: x_test_batch, y: y_test_batch}
             test_accuracy, test_loss = session.run(
@@ -120,29 +106,32 @@ def train(num_classes, data):
                   .format(epoch + 1, train_accuracy, test_accuracy, test_loss))
 
             # Сохраняем можель после каждой эпохи
-            saver.save(session, config.model_dir + config.model_name)
+            saver.save(session, params.base_params.model_dir + params.base_params.model_name)
 
 
 def console_train():
+    # Инициализируем наши параметры 
+    params = Params()
+
     # ВХОДНЫЕ ДАННЫЕ
     # ----------
     # Подготавливаем входные данные
     # Классы и их количество, которые хотим в дальнейшмем будем распознавать (пример: 'Цветок', 'Машина')
-    classes = os.listdir(config.train_path)
+    classes = os.listdir(params.base_params.train_path)
     num_classes = len(classes)
 
     # Подгружаем входные данные для тренировки сети
     data = read_train_sets(
-        config.train_path,
-        config.image_size,
+        params.base_params.train_path,
+        params.base_params.image_size,
         classes,
-        test_size=config.test_size
+        test_size=0.2
     )
 
     print("Тренировочные данные: {}".format(len(data.train.labels)))
     print("Проверочные данные: {}".format(len(data.test.labels)))
 
-    train(num_classes, data)
+    train(num_classes, data, params)
 
 
 if __name__ == '__main__':

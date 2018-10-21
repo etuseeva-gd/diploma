@@ -67,7 +67,7 @@ def create_fc_layer(input,
 def create_cnn(input,
                num_channels,
                num_classes,
-               layer_params,
+               nn_params,
                image_size):
     # @todo подумать о image_size
 
@@ -76,18 +76,18 @@ def create_cnn(input,
     layer = create_convolutional_layer(
         input=input,
         num_input_channels=num_channels,
-        conv_filter_size=layer_params[0]['filter_size'],
-        num_filters=layer_params[0]['num_filters']
+        conv_filter_size=nn_params.get_filter_size(0),
+        num_filters=nn_params.get_num_filters(0)
     )
     layer = create_max_pooling_layer(layer)
 
     # conv/pool 2 - n
-    for i in range(1, len(layer_params)):
+    for i in range(1, len(nn_params.layer_params)):
         layer = create_convolutional_layer(
             input=layer,
-            num_input_channels=layer_params[i - 1]['num_filters'],
-            conv_filter_size=layer_params[i]['filter_size'],
-            num_filters=layer_params[i]['num_filters']
+            num_input_channels=nn_params.get_num_filters(i - 1),
+            conv_filter_size=nn_params.get_filter_size(i),
+            num_filters=nn_params.get_num_filters(i)
         )
         layer = create_max_pooling_layer(layer)
 

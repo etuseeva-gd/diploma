@@ -5,20 +5,19 @@ import glob
 import cv2
 import sys
 import argparse
-import config
 from myutils import read_image
+from params import Params
 
-
-def predict(x_batch):
+def predict(x_batch, params):
     session = tf.Session()
 
     # ВОССТАНОВЛЕНИЕ МОДЕЛИ
     # ----------
     # Загружаем/восстанавливаем сохраненную обученную модель
     saver = tf.train.import_meta_graph(
-        config.model_dir + config.model_name + '.meta'
+        params.base_params.model_dir + params.base_params.model_name + '.meta'
     )
-    saver.restore(session, tf.train.latest_checkpoint(config.model_dir))
+    saver.restore(session, tf.train.latest_checkpoint(params.base_params.model_dir))
 
     graph = tf.get_default_graph()
 
@@ -30,7 +29,7 @@ def predict(x_batch):
     y = graph.get_tensor_by_name("y:0")
 
     # Узнаем сколько/каких классов нужно нам распознать
-    classes = os.listdir(config.train_path)
+    classes = os.listdir(params.base_params.train_path)
 
     y_test_images = np.zeros((1, len(classes)))
 
@@ -44,6 +43,9 @@ def predict(x_batch):
 
 
 def console_prediction():
+    # Инициализируем наши параметры 
+    params = Params()
+
     # ПОДГОТОВКА ВХОДНЫХ ДАННЫХ
     # ----------
     # Получаем данные о местоположении файла
@@ -54,26 +56,23 @@ def console_prediction():
     # Считываем изображение, которое необходимо распознать
     # Ввиду того, что вход НС имеет вид [None, image_height, image_width, num_channels]
     # мы преобразуем наши данные к нужной форме
-    images = [read_image(file_name, config.image_size)]
+    images = [read_image(file_name, params.base_params.image_size)]
     images = np.array(images, dtype=np.uint8)
     x_batch = images.reshape(
         1,
-        config.image_height,
-        config.image_width,
-        config.num_channels
+        params.base_params.image_height,
+        params.base_params.image_width,
+        params.base_params.num_channels
     )
 
-    cls, probability = predict(x_batch)
+    cls, probability = predict(x_batch, params)
     print('Это {0} на {1}%'.format(cls, probability))
 
 
 def web_prediction(image_url):
     print('web_prediction = ' + image_url)
     # Распознавание данных переданных по сети
-
     # @todo считать и преобразовать данные, которые скачаны из сети
-    # cls, probability = predict(x_batch)
-    # print('Это {0} на {1}%'.format(cls, probability))
 
 
 if __name__ == '__main__':

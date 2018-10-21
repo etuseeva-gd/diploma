@@ -1,6 +1,0 @@
-train_path=training_data
-test_path=testing_data
-model_dir=model/
-model_name=model
-image_size=128
-num_channels=3
