@@ -20,7 +20,7 @@ def conv_layer(input, weights, biases, strides=1):
     return tf.nn.relu(layer)
 
 
-def create_conv_layer(input,
+def create_convolutional_layer(input,
                       num_input_channels,
                       conv_filter_size,
                       num_filters):
