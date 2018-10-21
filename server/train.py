@@ -31,8 +31,8 @@ def init():
         test_size=config.test_size
     )
 
-    print("Тренировочные данные:\t\t{}".format(len(data.train.labels)))
-    print("Проверочные данные:\t{}".format(len(data.test.labels)))
+    print("Тренировочные данные: {}".format(len(data.train.labels)))
+    print("Проверочные данные: {}".format(len(data.test.labels)))
 
     # МОДЕЛЬ
     # ----------
@@ -52,10 +52,26 @@ def init():
 
     # Определяем сверточную НС
     # и получаем последний слой сети
+    layer_params = [
+        {
+            'filter_size': 3,
+            'num_filters': 32
+        },
+        {
+            'filter_size': 3,
+            'num_filters': 32
+        },
+        {
+            'filter_size': 3,
+            'num_filters': 64
+        }
+    ]
     y_pred, final_layer = cnn.create_cnn(
         input=x,
         num_channels=config.num_channels,
-        num_classes=num_classes
+        num_classes=num_classes,
+        layer_params=layer_params,
+        image_size=config.image_size
     )
 
     # session.run(tf.global_variables_initializer())
@@ -104,7 +120,7 @@ def init():
 
         num_batch = int(data.train.num_examples/config.batch_size)
         if i % num_batch == 0:
-            # Определяем что за эпоха, она нарастает
+            # Номер эпохи
             epoch = int(i / num_batch)
 
             train_accuracy = session.run(accuracy, feed_dict=feed_dict_train)

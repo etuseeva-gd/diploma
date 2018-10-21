@@ -1,4 +1,4 @@
-﻿import tensorflow as tf
+﻿﻿import tensorflow as tf
 import numpy as np
 
 
@@ -63,68 +63,51 @@ def create_fc_layer(input,
 
     return layer
 
-
+# @todo подумать о image_size
 def create_cnn(input,
                num_channels,
-               num_classes):
-    # Первые сверточный, подвыборки слои
-    filter_size_conv1 = 3
-    num_filters_conv1 = 32
-
-    first_conv_layer = create_convolutional_layer(
+               num_classes,
+               layer_params,
+               image_size):
+    # Conv + pool слои
+    # conv/pool 1
+    layer = create_convolutional_layer(
         input=input,
         num_input_channels=num_channels,
-        conv_filter_size=filter_size_conv1,
-        num_filters=num_filters_conv1
+        conv_filter_size=layer_params[0]['filter_size'],
+        num_filters=layer_params[0]['num_filters']
     )
+    layer = create_max_pooling_layer(layer)
 
-    first_conv_layer = create_max_pooling_layer(first_conv_layer)
+    # conv/pool 2 - n 
+    for i in range(1, len(layer_params)):
+        layer = create_convolutional_layer(
+            input=layer,
+            num_input_channels=layer_params[i-1]['num_filters'],
+            conv_filter_size=layer_params[i]['filter_size'],
+            num_filters=layer_params[i]['num_filters']
+        )
+        layer = create_max_pooling_layer(layer)
 
-    # Второй
-    filter_size_conv2 = 3
-    num_filters_conv2 = 32
+    # Fully Connected слои (одинаковые для всех)
+    layer = reshape_layer(layer)
 
-    second_conv_layer = create_convolutional_layer(
-        input=first_conv_layer,
-        num_input_channels=num_filters_conv1,
-        conv_filter_size=filter_size_conv2,
-        num_filters=num_filters_conv2
-    )
-
-    second_conv_layer = create_max_pooling_layer(second_conv_layer)
-
-    # Третий
-    filter_size_conv3 = 3
-    num_filters_conv3 = 64
-
-    third_conv_layer = create_convolutional_layer(
-        input=second_conv_layer,
-        num_input_channels=num_filters_conv2,
-        conv_filter_size=filter_size_conv3,
-        num_filters=num_filters_conv3
-    )
-
-    third_conv_layer = create_max_pooling_layer(third_conv_layer)
-
-    # Fully Connected слой
-    fc_layer_size = 128
-
-    first_fc_layer = reshape_layer(third_conv_layer)
-
-    first_fc_layer = create_fc_layer(
-        input=first_fc_layer,
-        num_inputs=first_fc_layer.get_shape()[
+    # fc 1
+    layer = create_fc_layer(
+        input=layer,
+        num_inputs=layer.get_shape()[
             1:4].num_elements(),
-        num_outputs=fc_layer_size,
+        num_outputs=image_size,
         use_relu=True
     )
 
-    second_fc_layer = create_fc_layer(
-        input=first_fc_layer,
-        num_inputs=fc_layer_size,
+    # fc 2 
+    layer = create_fc_layer(
+        input=layer,
+        num_inputs=image_size,
         num_outputs=num_classes,
         use_relu=False
     )
 
-    y = tf.nn.softmax(second_fc_layer, name="y_pred")
-    return y, second_fc_layer
+    y = tf.nn.softmax(layer, name="y_pred")
+    return y, layer
