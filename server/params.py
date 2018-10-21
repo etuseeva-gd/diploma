@@ -117,7 +117,7 @@ class NNParams:
         # узнали из файлика с параметрами
         data = read_json(train_params_path)
         self._layer_params = []
-        for layer_params in data:
+        for layer_params in data['layer_params']:
             self._layer_params.append({
                 'filter_size': layer_params['filter_size'],
                 'num_filters': layer_params['num_filters']

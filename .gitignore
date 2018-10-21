@@ -1,3 +1,5 @@
 server/testing_data/
 server/training_data/
+server/training_data/__pycache__
 example/
+.idea/

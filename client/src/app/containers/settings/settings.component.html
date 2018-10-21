@@ -1,46 +1,60 @@
 <h4>Настройки</h4>
 <h5>P.S. Данные настройки нужны исключительно для работы сервера</h5>
 
-<form *ngIf="params" autocomplete="off" (ngSubmit)="saveSettings()">
+<form *ngIf="params" autocomplete="off" (ngSubmit)="saveParams()">
   <mat-form-field>
     <input matInput
            placeholder="Размер изображения"
-           [(ngModel)]="params.imageSize"
+           [(ngModel)]="params.image_size"
            name="imageSize">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
-           placeholder="Число каналов (?)"
-           [(ngModel)]="params.numChannels"
+           placeholder="Высота изображения"
+           [(ngModel)]="params.image_height"
+           name="imageHeight">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput
+           placeholder="Ширина изображения"
+           [(ngModel)]="params.image_width"
+           name="imageWidth">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput
+           placeholder="Число каналов"
+           [(ngModel)]="params.num_channels"
            name="numChannels">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Путь до папки с тренировочными данными"
-           [(ngModel)]="params.trainingPath"
+           [(ngModel)]="params.train_path"
            name="trainingPath">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Пусть до папки с тест файлами"
-           [(ngModel)]="params.testingPath"
+           [(ngModel)]="params.test_path"
            name="testingPath">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Путь до папки с моделью"
-           [(ngModel)]="params.modelDir"
+           [(ngModel)]="params.model_dir"
            name="modelDir">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Имя модели (после тренировки)"
-           [(ngModel)]="params.modelName"
+           [(ngModel)]="params.model_name"
            name="modelName">
   </mat-form-field>
 

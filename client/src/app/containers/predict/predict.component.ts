@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {PredictParam} from '../../models/predict-param.model';
 import {ApiService} from '../../services/api.service';
 
 @Component({
@@ -8,13 +7,13 @@ import {ApiService} from '../../services/api.service';
   styleUrls: ['./predict.component.scss']
 })
 export class PredictComponent implements OnInit {
-  private param: PredictParam;
+  private param: any;
 
   constructor(private apiService: ApiService) {
   }
 
   ngOnInit() {
-    this.param = new PredictParam();
+    // this.param = new PredictParam();
   }
 
   predict() {

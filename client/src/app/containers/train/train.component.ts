@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {ApiService} from '../../services/api.service';
-import {TrainParams} from '../../models/params';
+import {ITrainParams} from '../../models/train-params.model';
+import {INNParams} from '../../models/nn-params.model';
+import {TrainService} from './train.service';
 
 @Component({
   selector: 'app-train',
@@ -8,17 +9,19 @@ import {TrainParams} from '../../models/params';
   styleUrls: ['./train.component.scss']
 })
 export class TrainComponent implements OnInit {
-  private params: TrainParams;
+  private trainParams: ITrainParams;
+  private nnParams: INNParams;
 
-  constructor(private apiService: ApiService) {
+  constructor(private trainService: TrainService) {
   }
 
   ngOnInit() {
-    this.params = new TrainParams();
+    this.trainService.getTrainParams().subscribe(params => this.trainParams = params);
+    this.trainService.getNNParams().subscribe(params => this.nnParams = params);
   }
 
   train() {
-    this.apiService.train(this.params);
+    this.trainService.train(this.trainParams, this.nnParams);
   }
 
 }

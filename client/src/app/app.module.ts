@@ -12,6 +12,9 @@ import { AppComponent } from './app.component';
 // Используемые сервисы
 import { ApiService } from './services/api.service';
 import { TransportService } from './services/transport.service';
+import {PredictService} from './containers/predict/predict.service';
+import {SettingsService} from './containers/settings/settings.service';
+import {TrainService} from './containers/train/train.service';
 
 // Обьявленные компоненты
 import { SettingsComponent } from './containers/settings/settings.component';
@@ -38,7 +41,10 @@ import { routing } from './app.routing';
   ],
   providers: [
     ApiService,
-    TransportService
+    TransportService,
+    PredictService,
+    SettingsService,
+    TrainService
   ],
   bootstrap: [AppComponent]
 })

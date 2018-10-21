@@ -1,29 +1,30 @@
 <h4>Тренировать</h4>
 
-<h5>Минимумальное число параметров для обучения</h5>
-<form *ngIf="params" autocomplete="off" (ngSubmit)="train()">
+<h5>Параметры обучени, параметры сети (сделать)</h5>
+<form *ngIf="trainParams && nnParams" autocomplete="off" (ngSubmit)="train()">
   <mat-form-field>
     <input matInput
            placeholder="Уровень обучения"
-           [(ngModel)]="params.learningRate"
+           [(ngModel)]="trainParams.learning_rate"
            name="learningRate">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Размер обучающейся партии"
-           [(ngModel)]="params.batchSize"
+           [(ngModel)]="trainParams.batch_size"
            name="batchSize">
   </mat-form-field>
 
   <mat-form-field>
     <input matInput
            placeholder="Количество итераций обучения"
-           [(ngModel)]="params.numIteration"
+           [(ngModel)]="trainParams.num_iteration"
            name="numIteration">
   </mat-form-field>
 
   <button mat-raised-button>Тренировать сеть</button>
 </form>
 
-{{params | json}}
+{{trainParams | json}}
+{{nnParams | json}}

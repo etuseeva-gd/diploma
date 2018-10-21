@@ -1,27 +1,57 @@
 import {Injectable} from '@angular/core';
 import {TransportService} from './transport.service';
-import {BaseParams, PredictParams, TrainParams} from '../models/params';
+import {map} from 'rxjs/operators';
+import {IBaseParams} from '../models/base-params.model';
+import {Observable} from 'rxjs/internal/Observable';
+import {ITrainParams} from '../models/train-params.model';
+import {INNParams} from '../models/nn-params.model';
 
 @Injectable()
 export class ApiService {
   constructor(private transportService: TransportService) {
   }
 
-  saveSettings(settings: BaseParams) {
-    const body = JSON.stringify({});
-    return this.transportService.post('/save_settings', body);
+  // Для settigns service
+  getBaseParams(): Observable<IBaseParams> {
+    return this.transportService.get('/get_base_params')
+      .pipe(
+        map(data => data as IBaseParams)
+      );
   }
 
-  train(settings: TrainParams) {
-    const body = JSON.stringify({});
+  saveBaseParams(body) {
+    return this.transportService.post('/save_base_params', body);
+  }
+
+  // Для train service
+  getTrainParams(): Observable<ITrainParams> {
+    return this.transportService.get('/get_train_params')
+      .pipe(
+        map(data => data as ITrainParams)
+      );
+  }
+
+  saveTrainParams(body) {
+    return this.transportService.post('/save_train_params', body);
+  }
+
+  getNNParams(): Observable<INNParams> {
+    return this.transportService.get('/get_nn_params')
+      .pipe(
+        map(data => data as INNParams)
+      );
+  }
+
+  saveNNParams(body) {
+    return this.transportService.post('/save_nn_params', body);
+  }
+
+  train(body) {
     return this.transportService.post('/train', body);
   }
 
-  predict(param: PredictParams) {
-    const body = JSON.stringify({
-      url: param.url
-    });
+  // Для predict service
+  predict(body) {
     return this.transportService.post('/predict', body);
   }
-
 }
