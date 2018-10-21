@@ -1,4 +1,4 @@
-﻿import dataset
+﻿from myutils import read_train_sets
 import tensorflow as tf
 import time
 import config
@@ -24,16 +24,15 @@ def init():
     num_classes = len(classes)
 
     # Подгружаем входные данные для тренировки сети
-    data = dataset.read_train_sets(
+    data = read_train_sets(
         config.train_path,
         config.image_size,
         classes,
         test_size=config.test_size
     )
 
-    print("Завершили считывание входнных данных")
-    print("Количество тренировочных данных:\t\t{}".format(len(data.train.labels)))
-    print("Количество проверочных данных:\t{}".format(len(data.test.labels)))
+    print("Тренировочные данные:\t\t{}".format(len(data.train.labels)))
+    print("Проверочные данные:\t{}".format(len(data.test.labels)))
 
     # МОДЕЛЬ
     # ----------
@@ -53,9 +52,11 @@ def init():
 
     # Определяем сверточную НС
     # и получаем последний слой сети
-    y_pred, final_layer = cnn.create_cnn(input=x,
-                                         num_channels=config.num_channels,
-                                         num_classes=num_classes)
+    y_pred, final_layer = cnn.create_cnn(
+        input=x,
+        num_channels=config.num_channels,
+        num_classes=num_classes
+    )
 
     # session.run(tf.global_variables_initializer())
 
@@ -65,13 +66,16 @@ def init():
     # Получаем cross entropy (перекрестную энропию)
     # Необходима для того, чтобы при обучении охаратеризовать насколько система
     # была права или нет при классификации того или иного обьекта
-    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=final_layer,
-                                                            labels=y)
+    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
+        logits=final_layer,
+        labels=y
+    )
     # Разность между полученным и ожидаемым значениями
     cost = tf.reduce_mean(cross_entropy)
     # Оптимизатор
     optimizer = tf.train.AdamOptimizer(
-        learning_rate=config.learning_rate).minimize(cost)
+        learning_rate=config.learning_rate
+    ).minimize(cost)
     # -----------------------
 
     # Точность операции
@@ -110,10 +114,12 @@ def init():
             )
             feed_dict_test = {x: x_test_batch, y: y_test_batch}
             test_accuracy, test_loss = session.run(
-                [accuracy, cost], feed_dict=feed_dict_test)
+                [accuracy, cost],
+                feed_dict=feed_dict_test
+            )
 
-            print("Эпоха {0}: Точность обучения = {1:>6.1%}, Точность проверки = {2:>6.1%}, Потеря = {3:.3f}".format(
-                epoch + 1, train_accuracy, test_accuracy, test_loss))
+            print("Эпоха {0}: Точность обучения = {1:>6.1%}, Точность проверки = {2:>6.1%}, Потеря = {3:.3f}"
+                  .format(epoch + 1, train_accuracy, test_accuracy, test_loss))
 
             # Сохраняем можель после каждой эпохи
             saver.save(session, config.model_dir + config.model_name)

@@ -11,19 +11,22 @@ def create_biases(size):
 
 
 def conv_layer(input, weights, biases, strides=1):
-    # Создаем сверточный слой
-    layer = tf.nn.conv2d(input=input,
-                         filter=weights,
-                         strides=[1, strides, strides, 1],
-                         padding='SAME')
+    # Обертка над внутренними tf функциями для создания conv слоя
+    layer = tf.nn.conv2d(
+        input=input,
+        filter=weights,
+        strides=[1, strides, strides, 1],
+        padding='SAME'
+    )
     layer = tf.nn.bias_add(layer, biases)
     return tf.nn.relu(layer)
 
 
 def create_convolutional_layer(input,
-                      num_input_channels,
-                      conv_filter_size,
-                      num_filters):
+                               num_input_channels,
+                               conv_filter_size,
+                               num_filters):
+    # Создаем сверточный слой
     weights = create_weights(shape=[
         conv_filter_size,
         conv_filter_size,
@@ -64,15 +67,16 @@ def create_fc_layer(input,
 def create_cnn(input,
                num_channels,
                num_classes):
-
     # Первые сверточный, подвыборки слои
     filter_size_conv1 = 3
     num_filters_conv1 = 32
 
-    first_conv_layer = create_convolutional_layer(input=input,
-                                                  num_input_channels=num_channels,
-                                                  conv_filter_size=filter_size_conv1,
-                                                  num_filters=num_filters_conv1)
+    first_conv_layer = create_convolutional_layer(
+        input=input,
+        num_input_channels=num_channels,
+        conv_filter_size=filter_size_conv1,
+        num_filters=num_filters_conv1
+    )
 
     first_conv_layer = create_max_pooling_layer(first_conv_layer)
 
@@ -80,10 +84,12 @@ def create_cnn(input,
     filter_size_conv2 = 3
     num_filters_conv2 = 32
 
-    second_conv_layer = create_convolutional_layer(input=first_conv_layer,
-                                                   num_input_channels=num_filters_conv1,
-                                                   conv_filter_size=filter_size_conv2,
-                                                   num_filters=num_filters_conv2)
+    second_conv_layer = create_convolutional_layer(
+        input=first_conv_layer,
+        num_input_channels=num_filters_conv1,
+        conv_filter_size=filter_size_conv2,
+        num_filters=num_filters_conv2
+    )
 
     second_conv_layer = create_max_pooling_layer(second_conv_layer)
 
@@ -91,10 +97,12 @@ def create_cnn(input,
     filter_size_conv3 = 3
     num_filters_conv3 = 64
 
-    third_conv_layer = create_convolutional_layer(input=second_conv_layer,
-                                                  num_input_channels=num_filters_conv2,
-                                                  conv_filter_size=filter_size_conv3,
-                                                  num_filters=num_filters_conv3)
+    third_conv_layer = create_convolutional_layer(
+        input=second_conv_layer,
+        num_input_channels=num_filters_conv2,
+        conv_filter_size=filter_size_conv3,
+        num_filters=num_filters_conv3
+    )
 
     third_conv_layer = create_max_pooling_layer(third_conv_layer)
 
@@ -102,17 +110,21 @@ def create_cnn(input,
     fc_layer_size = 128
 
     first_fc_layer = reshape_layer(third_conv_layer)
-    
-    first_fc_layer = create_fc_layer(input=first_fc_layer,
-                                     num_inputs=first_fc_layer.get_shape()[
-                                         1:4].num_elements(),
-                                     num_outputs=fc_layer_size,
-                                     use_relu=True)
 
-    second_fc_layer = create_fc_layer(input=first_fc_layer,
-                                      num_inputs=fc_layer_size,
-                                      num_outputs=num_classes,
-                                      use_relu=False)
+    first_fc_layer = create_fc_layer(
+        input=first_fc_layer,
+        num_inputs=first_fc_layer.get_shape()[
+            1:4].num_elements(),
+        num_outputs=fc_layer_size,
+        use_relu=True
+    )
+
+    second_fc_layer = create_fc_layer(
+        input=first_fc_layer,
+        num_inputs=fc_layer_size,
+        num_outputs=num_classes,
+        use_relu=False
+    )
 
     y = tf.nn.softmax(second_fc_layer, name="y_pred")
     return y, second_fc_layer

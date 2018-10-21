@@ -6,19 +6,18 @@ import cv2
 import sys
 import argparse
 import config
-
-# @todo сделать чтобы было несколько изображений
-# подумать над тем, чтобы разбить файлик
+from myutils import read_image
 
 
-def predict(x_batch):
+def predict(x_batch, classes):
     session = tf.Session()
 
     # ВОССТАНОВЛЕНИЕ МОДЕЛИ
     # ----------
     # Загружаем/восстанавливаем сохраненную обученную модель
     saver = tf.train.import_meta_graph(
-        config.model_dir + config.model_name + '.meta')
+        config.model_dir + config.model_name + '.meta'
+    )
     saver.restore(session, tf.train.latest_checkpoint(config.model_dir))
 
     graph = tf.get_default_graph()
@@ -30,14 +29,13 @@ def predict(x_batch):
     x = graph.get_tensor_by_name("x:0")
     y = graph.get_tensor_by_name("y:0")
 
-    classes = len(os.listdir(config.train_path))
     y_test_images = np.zeros((1, classes))
 
     # ПРЕДСКАЗАНИЕ
     # ----------
-    feed_dict_testing = {x: x_batch, y: y_test_images}
+    feed_dict_test = {x: x_batch, y: y_test_images}
 
-    return session.run(y_pred, feed_dict=feed_dict_testing)
+    return session.run(y_pred, feed_dict=feed_dict_test)
 
 
 def init():
@@ -46,25 +44,23 @@ def init():
     # Получаем данные о местоположении файла
     dir_path = os.path.dirname(os.path.realpath(__file__))
     image_path = sys.argv[1]
-    filename = dir_path + '/' + image_path
+    file_name = dir_path + '/' + image_path
 
     # Считываем изображение, которое необходимо распознать
-    image = cv2.imread(filename)
-    image = cv2.resize(
-        image, (config.image_size, config.image_size), 0, 0, cv2.INTER_LINEAR)
-
-    # Ввиду того, что вход НС имеет вид [None image_size image_size num_channels]
+    # Ввиду того, что вход НС имеет вид [None, image_height, image_width, num_channels]
     # мы преобразуем наши данные к нужной форме
-    images = []
-    images.append(image)
+    images = [read_image(file_name, config.image_size)]
     images = np.array(images, dtype=np.uint8)
-    images = images.astype('float32')
-    images = np.multiply(images, 1.0 / 255.0)
-    x_batch = images.reshape(1, config.image_size,
-                             config.image_size, config.num_channels)
+    x_batch = images.reshape(
+        1,
+        config.image_height,
+        config.image_width,
+        config.num_channels
+    )
+    classes = len(os.listdir(config.train_path))
 
-    print('Полученный результат:')
-    result = predict(x_batch)
+    # Получили необработанный результат
+    result = predict(x_batch, classes)
     print(result)
 
 
