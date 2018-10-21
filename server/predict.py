@@ -57,11 +57,15 @@ def init():
         config.image_width,
         config.num_channels
     )
-    classes = len(os.listdir(config.train_path))
 
-    # Получили необработанный результат
-    result = predict(x_batch, classes)
+    classes = os.listdir(config.train_path)
+    num_classes = len(classes)
+
+    # Получили результат
+    result = predict(x_batch, num_classes)
+
     print(result)
+    print('Это {0} на {1}%'.format(classes[np.argmax(result)], np.amax(result) * 100))
 
 
 if __name__ == '__main__':
