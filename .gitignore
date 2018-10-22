@@ -1,5 +1,5 @@
-server/testing_data/
-server/training_data/
-server/training_data/__pycache__
+recognizer/testing_data/
+recognizer/training_data/
+recognizer/utility/__pycache__
 example/
 .idea/

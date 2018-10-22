@@ -2,12 +2,19 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 import json
 
+# Лайфхак с импортом модулей
+# @todo исправить
+import sys
+import os
+sys.path.append(os.path.abspath('../recognizer'))
+
 # import predict
 # import train
 
-from constants import nn_params_path, base_params_path, train_params_path
-# from myutils import read_json
+from utility.jsonfile import read_json, write_json
+from utility.constants import nn_params_path, base_params_path, train_params_path
 
+recognizer_path = '../recognizer/'
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
@@ -28,13 +35,8 @@ class RequestHandler(BaseHTTPRequestHandler):
         # Подумать над web_train
         # Сохраняем праметры тренировки и нейронной сети
 
-        # @todo change to write file
-        with open(train_params_path, 'w') as outfile:
-            json.dump(body['train_params'], outfile)
-
-        with open(nn_params_path, 'w') as outfile:
-            json.dump(body['nn_params'], outfile)
-        # end todo
+        write_json(recognizer_path + train_params_path, body['train_params'])
+        write_json(recognizer_path + nn_params_path, body['nn_params'])
 
         # train.console_train()
 
@@ -43,12 +45,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         print('save settings')
 
     def handleGetParams(self, path):
-        # @todo chage on read_json
-        file = open(path)
-        data = json.load(file)
-        file.close()
-        # end toto
-
+        data = read_json(path)
         self.wfile.write(json.dumps(data).encode())
         return
 
@@ -60,11 +57,11 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         path = self.path
         if path == '/get_base_params':
-            self.handleGetParams(base_params_path)
+            self.handleGetParams(recognizer_path + base_params_path)
         elif path == '/get_nn_params':
-            self.handleGetParams(nn_params_path)
+            self.handleGetParams(recognizer_path + nn_params_path)
         elif path == '/get_train_params':
-            self.handleGetParams(train_params_path)
+            self.handleGetParams(recognizer_path + train_params_path)
         elif path == '/get_train_status':
             self.handleGetTrainStatus()
 
@@ -79,7 +76,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         if path == '/save_base_params':
             self.handlePOSTSaveBaseParams(body)
-        elif path == '/train':            
+        elif path == '/train':
             self.handlePOSTTrain(body)
         elif path == '/predict':
             self.handlePOSTPredict(body)
