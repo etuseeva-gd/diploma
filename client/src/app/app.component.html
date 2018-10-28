@@ -1,29 +1,32 @@
-<!--Header-->
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <span>Распознаватель</span>
-  </mat-toolbar-row>
-</mat-toolbar>
+<div class="container">
 
-<!--Main-->
-<mat-sidenav-container>
-  <!--Меню-->
-  <mat-sidenav mode="side" opened>
-    <mat-list>
-      <h3 mat-subheader>Действие</h3>
-      <mat-list-item *ngFor="let item of menu">
-        <mat-icon mat-list-icon>{{item.icon}}</mat-icon>
-        <a mat-line [routerLink]="item.urls">{{item.name}}</a>
-      </mat-list-item>
-    </mat-list>
-  </mat-sidenav>
+  <header>
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+        <span>Распознаватель</span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </header>
 
-  <mat-sidenav-content class="main-container">
-    <!--Роутинг-->
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
+  <main>
 
-</mat-sidenav-container>
+    <div class="left-block">
+      <mat-card>
+        <mat-list>
+          <h3 mat-subheader>Действие</h3>
+          <mat-list-item *ngFor="let item of menu">
+            <mat-icon mat-list-icon>{{item.icon}}</mat-icon>
+            <a mat-line [routerLink]="item.urls">{{item.name}}</a>
+          </mat-list-item>
+        </mat-list>
+      </mat-card>
+    </div>
 
+    <div class="right-block">
+      <mat-card>
+        <router-outlet></router-outlet>
+      </mat-card>
+    </div>
 
-
+  </main>
+</div>

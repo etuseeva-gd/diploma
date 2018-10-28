@@ -11,7 +11,19 @@ export class SettingsComponent implements OnInit {
   /**
    * Тут хранятся базовые параметры системы.
    */
-  private params: IBaseParams;
+    // private params: IBaseParams;
+  private params: IBaseParams = {
+    train_path: 'train_path',
+    test_path: 'test_path',
+    model_dir: 'model_dir',
+    model_name: 'model_name',
+    image_size: 128,
+    image_height: 128,
+    image_width: 128,
+    num_channels: 3
+  };
+
+  private paramsArr: [];
 
   constructor(private settingsService: SettingsService) {
   }

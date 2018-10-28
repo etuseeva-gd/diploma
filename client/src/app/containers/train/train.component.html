@@ -1,30 +1,41 @@
-<h4>Тренировать</h4>
+<div class="container-header">
+  <p>Тренировать</p>
+</div>
 
-<h5>Параметры обучени, параметры сети (сделать)</h5>
-<form *ngIf="trainParams && nnParams" autocomplete="off" (ngSubmit)="train()">
-  <mat-form-field>
-    <input matInput
-           placeholder="Уровень обучения"
-           [(ngModel)]="trainParams.learning_rate"
-           name="learningRate">
-  </mat-form-field>
+<div class="container-row">
+  <p>Введите настройки обучения:</p>
+  <form *ngIf="trainParams && nnParams" autocomplete="off" (ngSubmit)="train()">
+    <div class="form-style">
+      <mat-form-field class="form-field-style field-width-2">
+        <input matInput
+               placeholder="Learning rate (коэффициент)"
+               [(ngModel)]="trainParams.learning_rate"
+               name="learningRate">
+      </mat-form-field>
 
-  <mat-form-field>
-    <input matInput
-           placeholder="Размер обучающейся партии"
-           [(ngModel)]="trainParams.batch_size"
-           name="batchSize">
-  </mat-form-field>
+      <mat-form-field class="form-field-style field-width-2">
+        <input matInput
+               placeholder="Количество итераций обучения (шт)"
+               [(ngModel)]="trainParams.num_iteration"
+               name="numIteration">
+      </mat-form-field>
 
-  <mat-form-field>
-    <input matInput
-           placeholder="Количество итераций обучения"
-           [(ngModel)]="trainParams.num_iteration"
-           name="numIteration">
-  </mat-form-field>
+      <mat-form-field class="form-field-style field-width-2">
+        <input matInput
+               placeholder="Размер обучающейся партии (шт)"
+               [(ngModel)]="trainParams.batch_size"
+               name="batchSize">
+      </mat-form-field>
+    </div>
 
-  <button mat-raised-button>Тренировать сеть</button>
-</form>
+  </form>
+</div>
+
+<div class="container-row">
+  <p>Введите параметры сверточной нейронной сети:</p>
+</div>
+
+<button mat-raised-button>Тренировать сеть</button>
 
 {{trainParams | json}}
 {{nnParams | json}}
