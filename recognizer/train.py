@@ -12,7 +12,7 @@ from models.params import Params
 
 from utility.network import create_cnn
 from utility.image import read_train_sets
-from utility.constants import model_dir, model_name, train_path, report_path
+from utility.constants import model_dir, model_name, train_path, report_path, end_flag
 from utility.file import write_a, write_w
 
 seed(1)
@@ -114,7 +114,7 @@ def train(num_classes, data, params):
             saver.save(session, model_dir + model_name)
 
             # Записываем все в файл, чтобы потом показать UI
-            write_a(report_path, "{0} {1} {2} {3}".format(
+            write_a(report_path, "{0} {1} {2} {3}\n".format(
                 epoch + 1, train_accuracy, test_accuracy, test_loss))
 
     write_a(report_path, end_flag)

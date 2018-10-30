@@ -50,7 +50,7 @@ class BaseParams:
 
         # Количество канналов в изображении (green, blue, red)
         # если изображение черно-белое, то = 1
-        self._num_channels = data['num_channels']
+        self._num_channels = int(data['num_channels'])
 
     @property
     def image_size(self):
