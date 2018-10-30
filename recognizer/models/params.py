@@ -44,10 +44,6 @@ class BaseParams:
         # узнали из файлика с параметрами
         data = read_json(base_params_path)
 
-        self._train_path = data['train_path']
-        self._test_path = data['test_path']
-        self._model_dir = data['model_dir']
-        self._model_name = data['model_name']
         self._image_size = int(data['image_size'])
         self._image_height = int(data['image_height'])
         self._image_width = int(data['image_width'])
@@ -55,22 +51,6 @@ class BaseParams:
         # Количество канналов в изображении (green, blue, red)
         # если изображение черно-белое, то = 1
         self._num_channels = data['num_channels']
-
-    @property
-    def train_path(self):
-        return self._train_path
-
-    @property
-    def test_path(self):
-        return self._test_path
-
-    @property
-    def model_dir(self):
-        return self._model_dir
-
-    @property
-    def model_name(self):
-        return self._model_name
 
     @property
     def image_size(self):

@@ -12,6 +12,7 @@ from models.params import Params
 
 from utility.network import create_cnn
 from utility.image import read_train_sets
+from utility.constants import model_dir, model_name, train_path
 
 seed(1)
 set_random_seed(2)
@@ -108,8 +109,7 @@ def train(num_classes, data, params):
                   .format(epoch + 1, train_accuracy, test_accuracy, test_loss))
 
             # Сохраняем можель после каждой эпохи
-            saver.save(session, params.base_params.model_dir +
-                       params.base_params.model_name)
+            saver.save(session, model_dir + model_name)
 
 
 def console_train():
@@ -120,12 +120,12 @@ def console_train():
     # ----------
     # Подготавливаем входные данные
     # Классы и их количество, которые хотим в дальнейшмем будем распознавать (пример: 'Цветок', 'Машина')
-    classes = os.listdir(params.base_params.train_path)
+    classes = os.listdir(train_path)
     num_classes = len(classes)
 
     # Подгружаем входные данные для тренировки сети
     data = read_train_sets(
-        params.base_params.train_path,
+        train_path,
         params.base_params.image_size,
         classes,
         test_size=0.2

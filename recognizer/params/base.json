@@ -1,8 +1,4 @@
 {
-    "train_path": "training_data",
-    "test_path": "testing_data",
-    "model_dir": "model/",
-    "model_name": "model",
     "image_size": 128,
     "image_height": 128,
     "image_width": 128,

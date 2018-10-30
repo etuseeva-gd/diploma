@@ -7,18 +7,19 @@ import sys
 import argparse
 
 from utility.image import read_image
+from utility.constants import model_dir, model_name, train_path
 from models.params import Params
 
-def predict(x_batch, params):
+def predict(x_batch):
     session = tf.Session()
 
     # ВОССТАНОВЛЕНИЕ МОДЕЛИ
     # ----------
     # Загружаем/восстанавливаем сохраненную обученную модель
     saver = tf.train.import_meta_graph(
-        params.base_params.model_dir + params.base_params.model_name + '.meta'
+        model_dir + model_name + '.meta'
     )
-    saver.restore(session, tf.train.latest_checkpoint(params.base_params.model_dir))
+    saver.restore(session, tf.train.latest_checkpoint(model_dir))
 
     graph = tf.get_default_graph()
 
@@ -30,7 +31,7 @@ def predict(x_batch, params):
     y = graph.get_tensor_by_name("y:0")
 
     # Узнаем сколько/каких классов нужно нам распознать
-    classes = os.listdir(params.base_params.train_path)
+    classes = os.listdir(train_path)
 
     y_test_images = np.zeros((1, len(classes)))
 
@@ -66,7 +67,7 @@ def console_prediction():
         params.base_params.num_channels
     )
 
-    cls, probability = predict(x_batch, params)
+    cls, probability = predict(x_batch)
     print('Это {0} на {1}%'.format(cls, probability))
 
 
