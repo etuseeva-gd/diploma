@@ -11,9 +11,11 @@ sys.path.append(os.path.abspath('../recognizer'))
 # import train
 
 from utility.jsonfile import read_json, write_json
-from utility.constants import nn_params_path, base_params_path, train_params_path
+from utility.file import read
+from utility.constants import nn_params_path, base_params_path, train_params_path, report_path, end_flag
 
 recognizer_path = '../recognizer/'
+
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
@@ -30,9 +32,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         # predict.web_prediction('some_url')
 
     def handlePOSTTrain(self, body):
-        # Обрабатываем запрос на обучение некоторого изображения
-        # Подумать над web_train
-
+        # Обрабатываем запрос на обучение
         # Сохраняем праметры тренировки и нейронной сети
         write_json(recognizer_path + train_params_path, body['train_params'])
         write_json(recognizer_path + nn_params_path, body['nn_params'])
@@ -48,8 +48,27 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(data).encode())
         return
 
-    def handleGetTrainStatus(self):
-        print('get train status')
+    def handleGetReport(self):
+        is_train_ended = False
+        report = []
+        lines = read(recognizer_path + report_path)
+        for line in lines:
+            if line == end_flag:
+                is_train_ended = True
+                break
+
+            p = line.split()
+            report.append({
+                'epoch': p[0],
+                'train_accuracy': p[1],
+                'test_accuracy': p[2],
+                'test_loss': p[3]
+            })
+
+        self.wfile.write(json.dumps({
+            'is_train_ended': is_train_ended,
+            'statistics': report
+        }).encode())
 
     def do_GET(self):
         self.do_OPTIONS()
@@ -61,8 +80,8 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.handleGetParams(recognizer_path + nn_params_path)
         elif path == '/get_train_params':
             self.handleGetParams(recognizer_path + train_params_path)
-        elif path == '/get_train_status':
-            self.handleGetTrainStatus()
+        elif path == '/get_report':
+            self.handleGetReport()
 
     def do_POST(self):
         self.do_OPTIONS()

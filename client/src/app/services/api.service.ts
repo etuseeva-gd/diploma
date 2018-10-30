@@ -5,6 +5,7 @@ import {IBaseParams} from '../models/base-params.model';
 import {Observable} from 'rxjs/internal/Observable';
 import {ITrainParams} from '../models/train-params.model';
 import {INNParams} from '../models/nn-params.model';
+import {IReport} from "../models/report.model";
 
 @Injectable()
 export class ApiService {
@@ -40,6 +41,13 @@ export class ApiService {
 
   train(body) {
     return this.transportService.post('/train', body);
+  }
+
+  getReport() {
+    return this.transportService.get('/get_report')
+      .pipe(
+        map(data => data as IReport)
+      );
   }
 
   // Для predict service

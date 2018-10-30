@@ -10,3 +10,9 @@ test_path = 'testing_data'
 # Параметры с расположением модели
 model_dir = 'model/'
 model_name = 'model'
+
+# Файл с репортом
+report_path = 'report.txt'
+
+# Флаг, который говорит о том, что обучение закочилось
+end_flag = 'END'

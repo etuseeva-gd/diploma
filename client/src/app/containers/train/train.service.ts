@@ -23,4 +23,8 @@ export class TrainService {
     });
     return this.apiService.train(body);
   }
+
+  getReport() {
+    return this.apiService.getReport();
+  }
 }

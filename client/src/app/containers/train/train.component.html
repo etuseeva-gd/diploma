@@ -4,7 +4,7 @@
 
 <div class="container-row">
   <p>Введите настройки обучения:</p>
-  <form *ngIf="trainParams && nnParams" autocomplete="off" (ngSubmit)="train()">
+  <form *ngIf="trainParams" autocomplete="off" (ngSubmit)="train()">
     <div class="form-style">
       <mat-form-field class="form-field-style field-width-2">
         <input matInput
@@ -27,13 +27,24 @@
                name="batchSize">
       </mat-form-field>
     </div>
-
   </form>
+  <mat-spinner *ngIf="!trainParams"></mat-spinner>
 </div>
 
 <div class="container-row">
   <p>Введите параметры сверточной нейронной сети:</p>
-  {{nnParams | json}}
+  <div *ngIf="nnParams">
+    {{nnParams | json}}
+  </div>
+  <mat-spinner *ngIf="!nnParams"></mat-spinner>
 </div>
 
 <button mat-raised-button>Тренировать сеть</button>
+
+<div class="container-row">
+  <button mat-raised-button (click)="getReport()">Получить отчет</button>
+
+  <div *ngIf="report">
+    {{report | json}}
+  </div>
+</div>

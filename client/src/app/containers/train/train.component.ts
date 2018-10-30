@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ITrainParams} from '../../models/train-params.model';
 import {INNParams} from '../../models/nn-params.model';
 import {TrainService} from './train.service';
+import {IReport} from "../../models/report.model";
 
 @Component({
   selector: 'app-train',
@@ -11,6 +12,8 @@ import {TrainService} from './train.service';
 export class TrainComponent implements OnInit {
   private trainParams: ITrainParams;
   private nnParams: INNParams;
+
+  private report: IReport;
 
   constructor(private trainService: TrainService) {
   }
@@ -24,6 +27,12 @@ export class TrainComponent implements OnInit {
     this.trainService
       .train(this.trainParams, this.nnParams)
       .subscribe();
+  }
+
+  getReport() {
+    this.trainService
+      .getReport()
+      .subscribe(report => this.report = report);
   }
 
 }

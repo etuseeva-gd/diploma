@@ -12,7 +12,8 @@ from models.params import Params
 
 from utility.network import create_cnn
 from utility.image import read_train_sets
-from utility.constants import model_dir, model_name, train_path
+from utility.constants import model_dir, model_name, train_path, report_path
+from utility.file import write_a, write_w
 
 seed(1)
 set_random_seed(2)
@@ -82,6 +83,7 @@ def train(num_classes, data, params):
     # Определяем saver. Необходим нам для того, чтобы мы в дальнейшем смогли восстановить нашу модель.
     saver = tf.train.Saver(save_relative_paths=True)
 
+    write_w(report_path, '')
     for i in range(params.train_params.num_iteration):
         x_batch, y_batch, _, _ = data.train.next_batch(
             params.train_params.batch_size
@@ -110,6 +112,12 @@ def train(num_classes, data, params):
 
             # Сохраняем можель после каждой эпохи
             saver.save(session, model_dir + model_name)
+
+            # Записываем все в файл, чтобы потом показать UI
+            write_a(report_path, "{0} {1} {2} {3}".format(
+                epoch + 1, train_accuracy, test_accuracy, test_loss))
+
+    write_a(report_path, end_flag)
 
 
 def console_train():
