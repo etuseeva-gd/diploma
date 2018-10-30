@@ -1,14 +1,17 @@
-<h3>Введите нужные параметры</h3>
+<div class="container-header">
+  <p>Распознать (введите необходимые данные)</p>
+</div>
 
-<form *ngIf="param" autocomplete="off" (ngSubmit)="predict()">
-  <mat-form-field>
-    <input matInput
-           placeholder="Путь до изображения"
-           [(ngModel)]="param.url"
-           name="url">
-  </mat-form-field>
-
-  <button mat-raised-button>Распознать</button>
-</form>
-
-{{param | json}}
+<div class="container-row">
+  <form *ngIf="params" autocomplete="off" (ngSubmit)="predict()">
+    <div class="form-style">
+      <mat-form-field class="form-field-style field-width-2">
+        <input matInput
+               placeholder="Путь до изображения (url)"
+               [(ngModel)]="params.url"
+               name="imageHeight">
+      </mat-form-field>
+    </div>
+    <button mat-raised-button>Распознать</button>
+  </form>
+</div>
