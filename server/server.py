@@ -3,7 +3,6 @@ from urllib.parse import urlparse
 import json
 
 # Лайфхак с импортом модулей
-# @todo исправить
 import sys
 import os
 sys.path.append(os.path.abspath('../recognizer'))
