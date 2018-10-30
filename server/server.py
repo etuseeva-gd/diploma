@@ -32,8 +32,8 @@ class RequestHandler(BaseHTTPRequestHandler):
     def handlePOSTTrain(self, body):
         # Обрабатываем запрос на обучение некоторого изображения
         # Подумать над web_train
-        # Сохраняем праметры тренировки и нейронной сети
 
+        # Сохраняем праметры тренировки и нейронной сети
         write_json(recognizer_path + train_params_path, body['train_params'])
         write_json(recognizer_path + nn_params_path, body['nn_params'])
 
@@ -41,7 +41,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def handlePOSTSaveBaseParams(self, body):
         # Обрабатывает запрос на сохранение базовых настроек
-        print('save settings')
+        write_json(recognizer_path + base_params_path, body)
 
     def handleGetParams(self, path):
         data = read_json(path)

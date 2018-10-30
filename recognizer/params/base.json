@@ -1,6 +1,1 @@
-{
-    "image_size": 128,
-    "image_height": 128,
-    "image_width": 128,
-    "num_channels": 3
-}
+{"image_size": "128", "image_height": "128", "image_width": "128", "num_channels": "3"}

@@ -5,49 +5,14 @@
 <div class="container-row">
   <form *ngIf="params" autocomplete="off" (ngSubmit)="saveParams()">
     <div class="form-style">
-      <!--row 2-->
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Путь до тренировочных данных"
-               [(ngModel)]="params.train_path"
-               name="trainingPath">
-      </mat-form-field>
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Путь до тестовых данных"
-               [(ngModel)]="params.test_path"
-               name="testingPath">
-      </mat-form-field>
-
-      <!--row 3-->
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Путь до сохраненной модели"
-               [(ngModel)]="params.model_dir"
-               name="modelDir">
-      </mat-form-field>
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Имя файла с сохранненой моделью"
-               [(ngModel)]="params.model_name"
-               name="modelName">
-      </mat-form-field>
-
       <!--row 1-->
-      <mat-form-field class="form-field-style field-width-3">
-
-        <input matInput
-               placeholder="Размер изображения (px)"
-               [(ngModel)]="params.image_size"
-               name="imageSize">
-      </mat-form-field>
-      <mat-form-field class="form-field-style field-width-3">
+      <mat-form-field class="form-field-style field-width-2">
         <input matInput
                placeholder="Высота изображения (px)"
                [(ngModel)]="params.image_height"
                name="imageHeight">
       </mat-form-field>
-      <mat-form-field class="form-field-style field-width-3">
+      <mat-form-field class="form-field-style field-width-2">
         <input matInput
                placeholder="Ширина изображения (px)"
                [(ngModel)]="params.image_width"
@@ -55,7 +20,7 @@
       </mat-form-field>
 
       <!--row 4-->
-      <mat-form-field class="form-field-style field-width-3">
+      <mat-form-field class="form-field-style field-width-2">
         <input matInput
                placeholder="Число каналов изображения"
                [(ngModel)]="params.num_channels"
@@ -66,5 +31,3 @@
     <button mat-raised-button>Сохранить настройки</button>
   </form>
 </div>
-
-{{params | json}}

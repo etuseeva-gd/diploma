@@ -33,9 +33,7 @@
 
 <div class="container-row">
   <p>Введите параметры сверточной нейронной сети:</p>
+  {{nnParams | json}}
 </div>
 
 <button mat-raised-button>Тренировать сеть</button>
-
-{{trainParams | json}}
-{{nnParams | json}}
