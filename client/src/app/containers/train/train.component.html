@@ -28,22 +28,46 @@
       </mat-form-field>
     </div>
   </form>
-  <mat-spinner *ngIf="!trainParams"></mat-spinner>
+  <app-spinner *ngIf="!trainParams"></app-spinner>
 </div>
 
 <div class="container-row">
   <p>Введите параметры сверточной нейронной сети:</p>
-  <div *ngIf="nnParams">
-    {{nnParams | json}}
-  </div>
-  <mat-spinner *ngIf="!nnParams"></mat-spinner>
+  <form *ngIf="nnParams" autocomplete="off" (ngSubmit)="train()">
+    <div class="form-style" *ngFor="let param of nnParams.layer_params; let i = index">
+      <mat-form-field class="form-field-style field-width-3">
+        <input matInput
+               placeholder="Размер фильтра (filter_size)"
+               [(ngModel)]="param.filter_size"
+               name="filterSize{{i}}">
+      </mat-form-field>
+      <mat-form-field class="form-field-style field-width-3">
+        <input matInput
+               placeholder="Количество фильтров (num_filters)"
+               [(ngModel)]="param.num_filters"
+               name="numFilters{{i}}">
+      </mat-form-field>
+
+      <div class="form-field-style field-width-3">
+        <button mat-mini-fab (click)="removeLayer(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <button mat-mini-fab (click)="addLayer()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </form>
+  <app-spinner *ngIf="!nnParams"></app-spinner>
 </div>
 
-<button mat-raised-button>Тренировать сеть</button>
+<div class="container-row">
+  <button mat-raised-button (click)="train()">Тренировать сеть</button>
+  <button mat-raised-button (click)="getReport()">Получить отчет</button>
+</div>
 
 <div class="container-row">
-  <button mat-raised-button (click)="getReport()">Получить отчет</button>
-
   <div *ngIf="report">
     {{report | json}}
   </div>

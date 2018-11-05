@@ -20,6 +20,7 @@ import {TrainService} from './containers/train/train.service';
 import { SettingsComponent } from './containers/settings/settings.component';
 import { TrainComponent } from './containers/train/train.component';
 import { PredictComponent } from './containers/predict/predict.component';
+import { SpinnerComponent } from "./components/spinner/spinner.component";
 
 // Роутинг
 import { routing } from './app.routing';
@@ -29,7 +30,8 @@ import { routing } from './app.routing';
     AppComponent,
     SettingsComponent,
     TrainComponent,
-    PredictComponent
+    PredictComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,

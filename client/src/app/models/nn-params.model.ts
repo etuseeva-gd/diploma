@@ -3,6 +3,6 @@ export interface INNParams {
 }
 
 export interface ILayerParams {
-  filter_size: number;
-  num_filters: number;
+  filter_size: number | string;
+  num_filters: number | string;
 }
