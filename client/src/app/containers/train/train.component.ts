@@ -13,8 +13,11 @@ export class TrainComponent implements OnInit {
   private trainParams: ITrainParams;
   private nnParams: INNParams;
 
-  private _reportId;
+  private _reportId; // @todo rename
   private report: IReport;
+
+  private accuracyResults: any = [];
+  private lossResults: any = [];
 
   constructor(private trainService: TrainService) {
   }
@@ -22,12 +25,14 @@ export class TrainComponent implements OnInit {
   ngOnInit() {
     this.trainService.getTrainParams().subscribe(params => this.trainParams = params);
     this.trainService.getNNParams().subscribe(params => this.nnParams = params);
+
+    this.getReport(); // удалить
   }
 
   train() {
     this.trainService
       .train(this.trainParams, this.nnParams)
-      .subscribe();
+      .subscribe(() => this.getReport());
   }
 
   getReport() {
@@ -35,6 +40,48 @@ export class TrainComponent implements OnInit {
       .getReport()
       .subscribe(report => {
         this.report = report;
+
+        // @todo сделать модель для этого
+        const results = [
+          {
+            name: 'Train Accuracy',
+            series: []
+          },
+          {
+            name: 'Test Accuracy',
+            series: []
+          },
+          {
+            name: 'Test Loss',
+            series: []
+          }
+        ];
+
+        (report.statistics || []).forEach(statistic => {
+          const epoch = statistic.epoch;
+
+          const trainAcc = statistic.train_accuracy;
+          results[0].series.push({
+            name: epoch,
+            value: trainAcc
+          });
+
+          const testAcc = statistic.test_accuracy;
+          results[1].series.push({
+            name: epoch,
+            value: testAcc
+          });
+
+          const testLoss = statistic.test_loss;
+          results[2].series.push({
+            name: epoch,
+            value: testLoss
+          });
+
+        });
+
+        this.accuracyResults = [results[0], results[1]];
+        this.lossResults = [results[2]];
 
         if (report.is_train_ended) {
           this._reportId.unsubscribe();
@@ -47,7 +94,6 @@ export class TrainComponent implements OnInit {
       filter_size: 3,
       num_filters: 32
     } as ILayerParams;
-
     this.nnParams.layer_params.push(layer);
   }
 
@@ -55,8 +101,6 @@ export class TrainComponent implements OnInit {
     if (this.nnParams.layer_params.length === 1) {
       return;
     }
-
     this.nnParams.layer_params.splice(index, 1);
   }
-
 }

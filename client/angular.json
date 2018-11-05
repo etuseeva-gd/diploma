@@ -24,7 +24,9 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/hammerjs/hammer.min.js"
+              "node_modules/hammerjs/hammer.min.js",
+//              "release/index.js",
+//              "release/index.min.js"
             ]
           },
           "configurations": {

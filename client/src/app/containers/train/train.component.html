@@ -64,11 +64,9 @@
 
 <div class="container-row">
   <button mat-raised-button (click)="train()">Тренировать сеть</button>
-  <button mat-raised-button (click)="getReport()">Получить отчет</button>
 </div>
 
-<div class="container-row">
-  <div *ngIf="report">
-    {{report | json}}
-  </div>
+<div *ngIf="report" class="container-row charts-container">
+  <app-chart [results]="accuracyResults" [xAxisLabel]="'Эпоха (шт)'" [yAxisLabel]="'Точность (%)'"></app-chart>
+  <app-chart [results]="lossResults" [xAxisLabel]="'Эпоха (шт)'" [yAxisLabel]="'Потеря'"></app-chart>
 </div>

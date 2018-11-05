@@ -21,9 +21,12 @@ import { SettingsComponent } from './containers/settings/settings.component';
 import { TrainComponent } from './containers/train/train.component';
 import { PredictComponent } from './containers/predict/predict.component';
 import { SpinnerComponent } from "./components/spinner/spinner.component";
+import { ChartComponent } from "./components/chart/chart.component";
 
 // Роутинг
 import { routing } from './app.routing';
+
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,8 @@ import { routing } from './app.routing';
     SettingsComponent,
     TrainComponent,
     PredictComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    ChartComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +43,8 @@ import { routing } from './app.routing';
     FormsModule,
     HttpClientModule,
     MaterialModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgxChartsModule
   ],
   providers: [
     ApiService,
