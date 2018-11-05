@@ -14,8 +14,8 @@ from utility.jsonfile import read_json, write_json
 from utility.file import read
 from utility.constants import nn_params_path, base_params_path, train_params_path, report_path, end_flag
 
-recognizer_path = '../recognizer/'
-
+# recognizer_path = '../recognizer/'
+recognizer_path = ''
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
@@ -37,7 +37,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         write_json(recognizer_path + train_params_path, body['train_params'])
         write_json(recognizer_path + nn_params_path, body['nn_params'])
 
-        train.console_train()
+        train.console_train() #!!!исправить!!! работа остановится из-за этого
 
     def handlePOSTSaveBaseParams(self, body):
         # Обрабатывает запрос на сохранение базовых настроек

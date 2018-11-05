@@ -1,18 +1,20 @@
 # Расположение параметров - базовых, тренировочных, сети
-base_params_path = 'params/base.json'
-train_params_path = 'params/train.json'
-nn_params_path = 'params/nn.json'
+absolute_path = 'C:/Users/lenok/Desktop/diploma/recognizer/'
+
+base_params_path = absolute_path + 'params/base.json'
+train_params_path = absolute_path + 'params/train.json'
+nn_params_path = absolute_path + 'params/nn.json'
 
 # Параметры, о расположенни тренировочных данных
-train_path = 'training_data'
-test_path = 'testing_data'
+train_path = absolute_path + 'training_data'
+test_path = absolute_path + 'testing_data'
 
 # Параметры с расположением модели
-model_dir = 'model/'
+model_dir = absolute_path + 'model/'
 model_name = 'model'
 
 # Файл с репортом
-report_path = 'report.txt'
+report_path = absolute_path + 'report.txt'
 
 # Флаг, который говорит о том, что обучение закочилось
 end_flag = 'END'
