@@ -13,6 +13,7 @@ export class TrainComponent implements OnInit {
   private trainParams: ITrainParams;
   private nnParams: INNParams;
 
+  private _reportId;
   private report: IReport;
 
   constructor(private trainService: TrainService) {
@@ -30,9 +31,15 @@ export class TrainComponent implements OnInit {
   }
 
   getReport() {
-    this.trainService
+    this._reportId = this.trainService
       .getReport()
-      .subscribe(report => this.report = report);
+      .subscribe(report => {
+        this.report = report;
+
+        if (report.is_train_ended) {
+          this._reportId.unsubscribe();
+        }
+      });
   }
 
   addLayer() {

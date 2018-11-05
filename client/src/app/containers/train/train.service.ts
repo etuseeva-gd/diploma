@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {ApiService} from '../../services/api.service';
 import {ITrainParams} from '../../models/train-params.model';
 import {INNParams} from '../../models/nn-params.model';
+import {interval} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 
 @Injectable()
 export class TrainService {
@@ -25,6 +27,9 @@ export class TrainService {
   }
 
   getReport() {
-    return this.apiService.getReport();
+    return interval(3 * 1000)
+      .pipe(
+        switchMap(() => this.apiService.getReport())
+      );
   }
 }
