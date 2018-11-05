@@ -1,4 +1,4 @@
-﻿class DataSet(object):
+class DataSet(object):
     def __init__(self, images, labels, img_names, cls):
         self._num_examples = images.shape[0]
 

@@ -7,8 +7,8 @@ import sys
 import os
 sys.path.append(os.path.abspath('../recognizer'))
 
-# import predict
-# import train
+import predict
+import train
 
 from utility.jsonfile import read_json, write_json
 from utility.file import read
@@ -37,7 +37,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         write_json(recognizer_path + train_params_path, body['train_params'])
         write_json(recognizer_path + nn_params_path, body['nn_params'])
 
-        # train.console_train()
+        train.console_train()
 
     def handlePOSTSaveBaseParams(self, body):
         # Обрабатывает запрос на сохранение базовых настроек
