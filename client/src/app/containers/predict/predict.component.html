@@ -9,9 +9,20 @@
         <input matInput
                placeholder="Путь до изображения (url)"
                [(ngModel)]="params.url"
-               name="imageHeight">
+               name="imageHeight"
+               (ngModelChange)="clearResult()">
       </mat-form-field>
     </div>
     <button mat-raised-button>Распознать</button>
   </form>
+</div>
+
+
+<div class="container-row">
+  <app-spinner *ngIf="!result && isRecognized"></app-spinner>
+
+  <div *ngIf="result">
+    <img [src]="params.url">
+    <h1>Это {{result.cls}} ({{result.probability}}%)</h1>
+  </div>
 </div>

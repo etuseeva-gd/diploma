@@ -64,9 +64,13 @@
 
 <div class="container-row">
   <button mat-raised-button (click)="train()">Тренировать сеть</button>
+  <button mat-raised-button (click)="getReport()">Получить репорт по последнему обучению</button>
 </div>
 
 <div *ngIf="report" class="container-row charts-container">
+  <h1 *ngIf="isTrainEnded">Обучение завершено!</h1>
+  <h1 *ngIf="!isTrainEnded">Обучение в стадии прогресса</h1>
+
   <app-chart [results]="accuracyResults" [xAxisLabel]="'Эпоха (шт)'" [yAxisLabel]="'Точность (%)'"></app-chart>
   <app-chart [results]="lossResults" [xAxisLabel]="'Эпоха (шт)'" [yAxisLabel]="'Потеря'"></app-chart>
 </div>

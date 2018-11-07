@@ -45,6 +45,8 @@ def predict(x_batch):
     feed_dict_test = {x: x_batch, y: y_test_images}
     result = session.run(y_pred, feed_dict=feed_dict_test)
 
+    print(result)
+
     # Возвращаем какой класс и какая вертоятность что это он
     return classes[np.argmax(result)], np.amax(result) * 100
 

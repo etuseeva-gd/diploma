@@ -19,6 +19,8 @@ export class TrainComponent implements OnInit {
   private accuracyResults: any = [];
   private lossResults: any = [];
 
+  private isTrainEnded: boolean = false;
+
   constructor(private trainService: TrainService) {
   }
 
@@ -39,6 +41,8 @@ export class TrainComponent implements OnInit {
     this._reportId = this.trainService
       .getReport()
       .subscribe(report => {
+        this.isTrainEnded = false;
+
         this.report = report;
 
         // @todo сделать модель для этого
@@ -63,13 +67,13 @@ export class TrainComponent implements OnInit {
           const trainAcc = statistic.train_accuracy;
           results[0].series.push({
             name: epoch,
-            value: trainAcc
+            value: trainAcc * 100
           });
 
           const testAcc = statistic.test_accuracy;
           results[1].series.push({
             name: epoch,
-            value: testAcc
+            value: testAcc * 100
           });
 
           const testLoss = statistic.test_loss;
@@ -84,6 +88,7 @@ export class TrainComponent implements OnInit {
         this.lossResults = [results[2]];
 
         if (report.is_train_ended) {
+          this.isTrainEnded = true;
           this._reportId.unsubscribe();
         }
       });

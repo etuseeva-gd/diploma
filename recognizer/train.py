@@ -91,7 +91,8 @@ def train(num_classes, data, params):
         feed_dict_train = {x: x_batch, y: y_batch}
         session.run(optimizer, feed_dict=feed_dict_train)
 
-        num_batch = int(data.train.num_examples/params.train_params.batch_size)
+        num_batch = int(data.train.num_examples /
+                        params.train_params.batch_size)
         if i % num_batch == 0:
             # Номер эпохи
             epoch = int(i / num_batch)

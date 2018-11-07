@@ -6,6 +6,7 @@ import {Observable} from 'rxjs/internal/Observable';
 import {ITrainParams} from '../models/train-params.model';
 import {INNParams} from '../models/nn-params.model';
 import {IReport} from "../models/report.model";
+import {IPredictResult} from "../models/predict-result.model";
 
 @Injectable()
 export class ApiService {
@@ -52,6 +53,9 @@ export class ApiService {
 
   // Для predict service
   predict(body) {
-    return this.transportService.post('/predict', body);
+    return this.transportService.post('/predict', body)
+      .pipe(
+        map(data => data as IPredictResult)
+      );
   }
 }
