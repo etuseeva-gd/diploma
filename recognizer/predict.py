@@ -4,11 +4,16 @@ import os
 import glob
 import cv2
 import sys
-import argparse
 
-from utility.image import read_image
+
+from utility.image import prepare_image, get_image_by_path, get_image_by_url
 from utility.constants import model_dir, model_name, train_path
 from models.params import Params
+
+
+def is_model_exists():
+    return os.path.isfile(model_dir + model_name + '.meta')
+
 
 def predict(x_batch):
     session = tf.Session()
@@ -44,21 +49,16 @@ def predict(x_batch):
     return classes[np.argmax(result)], np.amax(result) * 100
 
 
-def console_prediction():
-    # Инициализируем наши параметры 
+def loc_predict(image):
+    # Инициализируем наши параметры
     params = Params()
 
     # ПОДГОТОВКА ВХОДНЫХ ДАННЫХ
     # ----------
-    # Получаем данные о местоположении файла
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    image_path = sys.argv[1]
-    file_name = dir_path + '/' + image_path
-
     # Считываем изображение, которое необходимо распознать
     # Ввиду того, что вход НС имеет вид [None, image_height, image_width, num_channels]
     # мы преобразуем наши данные к нужной форме
-    images = [read_image(file_name, params.base_params.image_size)]
+    images = [prepare_image(image, params.base_params.image_size)]
     images = np.array(images, dtype=np.uint8)
     x_batch = images.reshape(
         1,
@@ -67,14 +67,26 @@ def console_prediction():
         params.base_params.num_channels
     )
 
-    cls, probability = predict(x_batch)
+    return predict(x_batch)
+
+
+def console_prediction():
+    # Получаем данные о местоположении файла
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    image_path = sys.argv[1]
+    path = dir_path + '/' + image_path
+
+    # Получаем текущее изображение
+    image = get_image_by_path(path)
+
+    cls, probability = loc_predict(image)
     print('Это {0} на {1}%'.format(cls, probability))
 
 
-def web_prediction(image_url):
-    print('web_prediction = ' + image_url)
-    # Распознавание данных переданных по сети
-    # @todo считать и преобразовать данные, которые скачаны из сети
+def web_prediction(url):
+    # Выкачиваем текущее изображение из интернета
+    image = get_image_by_url(url)
+    return loc_predict(image)
 
 
 if __name__ == '__main__':

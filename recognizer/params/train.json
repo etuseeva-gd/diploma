@@ -1,1 +1,1 @@
-{"learning_rate": "1e-3", "num_iteration": "300", "batch_size": "10"}
+{"learning_rate": "1e-3", "num_iteration": "400", "batch_size": "32"}

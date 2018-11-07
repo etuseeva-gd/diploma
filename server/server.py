@@ -5,7 +5,10 @@ import json
 # Лайфхак с импортом модулей
 import sys
 import os
-sys.path.append(os.path.abspath('../recognizer'))
+
+absolute_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+absolute_path = absolute_path.replace("\\", "/")
+sys.path.append(absolute_path + '/recognizer')
 
 import predict
 import train
@@ -32,9 +35,17 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def handlePOSTPredict(self, body):
+        if not predict.is_model_exists():
+            self.wfile.write(json.dumps(
+                {'message': 'Модель не определена'}).encode())
+            return
+
         # Обрабатываем запрос на обучение некоторого изображения
-        print('handlePOSTPredict')
-        # predict.web_prediction('some_url')
+        cls, probability = predict.web_prediction(body['url'])
+        self.wfile.write(json.dumps({
+            'cls': cls,
+            'probability': probability
+        }).encode())
 
     def handlePOSTTrain(self, body):
         # Обрабатываем запрос на обучение
@@ -49,9 +60,9 @@ class RequestHandler(BaseHTTPRequestHandler):
             # Очистили предыдущий репорт
             write_w(report_path, '')
             train_in_progress = True
-            
+
             message = 'Обучение началось'
-        
+
         self.wfile.write(json.dumps({'message': message}).encode())
 
     def handlePOSTSaveBaseParams(self, body):

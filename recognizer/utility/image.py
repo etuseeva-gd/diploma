@@ -4,10 +4,21 @@ import glob
 from sklearn.utils import shuffle
 import numpy as np
 from models.dataset import DataSet
+import urllib.request
 
 
-def read_image(file_name, image_size):
-    image = cv2.imread(file_name)
+def get_image_by_url(url):
+    req = urllib.request.urlopen(url)
+    arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+    return cv2.imdecode(arr, -1)
+
+
+def get_image_by_path(path):
+    return cv2.imread(path)
+
+
+def prepare_image(image, image_size):
+    # Подготовка изображения для дальнейшего распознавания
     image = cv2.resize(
         image,
         (image_size, image_size),
@@ -33,7 +44,8 @@ def load_images(train_path, image_size, classes):
         files = glob.glob(path)
         for file_name in files:
             # Изображения
-            images.append(read_image(file_name, image_size))
+            image = get_image_by_path(file_name)
+            images.append(prepare_image(image, image_size))
 
             # label изображения
             label = np.zeros(len(classes))
