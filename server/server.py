@@ -11,13 +11,15 @@ import predict
 import train
 
 from utility.jsonfile import read_json, write_json
-from utility.file import read
+from utility.file import read, write_w
 from utility.constants import nn_params_path, base_params_path, train_params_path, report_path, end_flag
 
-from multiprocessing import Pool
+import threading
 
 # recognizer_path = '../recognizer/'
 recognizer_path = ''
+
+train_in_progress = False
 
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -40,9 +42,17 @@ class RequestHandler(BaseHTTPRequestHandler):
         write_json(recognizer_path + train_params_path, body['train_params'])
         write_json(recognizer_path + nn_params_path, body['nn_params'])
 
-        #!!!исправить!!! работа остановится из-за этого
-        pool = Pool(processes=2)
-        pool.apply_async(train.console_train())
+        message = 'Обучение уже было начато'
+        # Плохое решение
+        global train_in_progress
+        if not train_in_progress:
+            # Очистили предыдущий репорт
+            write_w(report_path, '')
+            train_in_progress = True
+            
+            message = 'Обучение началось'
+        
+        self.wfile.write(json.dumps({'message': message}).encode())
 
     def handlePOSTSaveBaseParams(self, body):
         # Обрабатывает запрос на сохранение базовых настроек
@@ -105,7 +115,28 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.handlePOSTPredict(body)
 
 
-if __name__ == '__main__':
+def start_server():
     server = HTTPServer(('localhost', 8000), RequestHandler)
     print('Сервер запущен на - http://localhost:8000')
     server.serve_forever()
+
+
+def train_watcher():
+    global train_in_progress
+
+    while True:
+        if train_in_progress:
+            train.console_train()
+            train_in_progress = False
+            print('Обучение закончилось')
+
+
+if __name__ == '__main__':
+    server_thread = threading.Thread(target=start_server)
+    server_thread.start()
+
+    train_thread = threading.Thread(target=train_watcher)
+    train_thread.start()
+
+    server_thread.join()
+    train_thread.join()
