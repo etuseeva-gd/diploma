@@ -17,18 +17,21 @@ def get_image_by_path(path):
     return cv2.imread(path)
 
 
-def prepare_image(image, image_size):
+def prepare_image_for_train(image, image_size):
     # Подготовка изображения для дальнейшего распознавания
-    image = cv2.resize(
-        image,
-        (image_size, image_size),
-        0,
-        0,
-        cv2.INTER_LINEAR
-    )
+    image = cv2.resize(image, (image_size, image_size), 0, 0, cv2.INTER_LINEAR)
     image = image.astype(np.float32)
     image = np.multiply(image, 1.0 / 255.0)
     return image
+
+
+def prepare_image_for_predict(image, image_size):
+    image = cv2.resize(image, (image_size, image_size), 0, 0, cv2.INTER_LINEAR)
+    images = [image]
+    images = np.array(images, dtype=np.uint8)
+    images = images.astype(np.float32)
+    images = np.multiply(images, 1.0 / 255.0)
+    return images
 
 
 def load_images(train_path, image_size, classes):
@@ -45,7 +48,7 @@ def load_images(train_path, image_size, classes):
         for file_name in files:
             # Изображения
             image = get_image_by_path(file_name)
-            images.append(prepare_image(image, image_size))
+            images.append(prepare_image_for_train(image, image_size))
 
             # label изображения
             label = np.zeros(len(classes))
