@@ -92,4 +92,13 @@ def web_prediction(url):
 
 
 if __name__ == '__main__':
-    console_prediction()
+    # console_prediction()
+
+    path = 'C:/Users/lenok/Desktop/diploma/recognizer/testing_data/dogs/'
+    files = os.listdir(path)
+    for file in files:
+        print(path + file)
+        image = get_image_by_path(path + file)
+        cls, probability = loc_predict(image)
+
+        print('Это {0} на {1}%'.format(cls, probability))
