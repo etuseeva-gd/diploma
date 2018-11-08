@@ -15,11 +15,31 @@ def is_model_exists():
     return os.path.isfile(model_dir + model_name + '.meta')
 
 
-def predict(x_batch):
-    session = tf.Session()
+def predict(image):
+    if not is_model_exists():
+        print('В начале обучите данные! Модель не найдена!')
+        return
+
+    # Инициализируем наши параметры
+    params = Params()
+
+    # ПОДГОТОВКА ВХОДНЫХ ДАННЫХ
+    # ----------
+    # Считываем изображение, которое необходимо распознать
+    # Ввиду того, что вход НС имеет вид [None, image_height, image_width, num_channels]
+    # мы преобразуем наши данные к нужной форме
+    images = prepare_image_for_predict(image, params.base_params.image_size)
+    x_batch = images.reshape(
+        1,
+        params.base_params.image_height,
+        params.base_params.image_width,
+        params.base_params.num_channels
+    )
 
     # ВОССТАНОВЛЕНИЕ МОДЕЛИ
     # ----------
+    session = tf.Session()
+
     # Загружаем/восстанавливаем сохраненную обученную модель
     saver = tf.train.import_meta_graph(
         model_dir + model_name + '.meta'
@@ -51,28 +71,8 @@ def predict(x_batch):
     return classes[np.argmax(result)], np.amax(result) * 100
 
 
-def loc_predict(image):
-    # Инициализируем наши параметры
-    params = Params()
-
-    # ПОДГОТОВКА ВХОДНЫХ ДАННЫХ
-    # ----------
-    # Считываем изображение, которое необходимо распознать
-    # Ввиду того, что вход НС имеет вид [None, image_height, image_width, num_channels]
-    # мы преобразуем наши данные к нужной форме
-    images = prepare_image_for_predict(image, params.base_params.image_size)
-    x_batch = images.reshape(
-        1,
-        params.base_params.image_height,
-        params.base_params.image_width,
-        params.base_params.num_channels
-    )
-
-    return predict(x_batch)
-
-
 def console_prediction():
-    # Получаем данные о местоположении файла
+    #  Получаем данные о местоположении файла
     dir_path = os.path.dirname(os.path.realpath(__file__))
     image_path = sys.argv[1]
     path = dir_path + '/' + image_path
@@ -80,14 +80,14 @@ def console_prediction():
     # Получаем текущее изображение
     image = get_image_by_path(path)
 
-    cls, probability = loc_predict(image)
+    cls, probability = predict(image)
     print('Это {0} на {1}%'.format(cls, probability))
 
 
 def web_prediction(url):
     # Выкачиваем текущее изображение из интернета
     image = get_image_by_url(url)
-    return loc_predict(image)
+    return predict(image)
 
 
 if __name__ == '__main__':

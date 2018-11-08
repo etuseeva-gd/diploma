@@ -151,3 +151,5 @@ if __name__ == '__main__':
 
     server_thread.join()
     train_thread.join()
+
+    # Удалить предыдущий репорт - если он не полноценный
