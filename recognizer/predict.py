@@ -91,7 +91,7 @@ def web_prediction(url):
 
 
 if __name__ == '__main__':
-    # console_prediction()
+    console_prediction()
 
     # path = 'C:/Users/lenok/Desktop/diploma/recognizer/training_data/dogs/'
     # files = os.listdir(path)
