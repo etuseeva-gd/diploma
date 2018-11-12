@@ -10,6 +10,7 @@ from utility.image import prepare_image_for_predict, get_image_by_path, get_imag
 from utility.constants import model_dir, model_name, train_path
 from models.params import Params
 from utility.file import read, write_a, write_w
+from utility.jsonfile import read_json
 
 
 def is_model_exists():
@@ -54,12 +55,14 @@ def predict(image):
 
     # Передаем данные сети на вход
     x = graph.get_tensor_by_name("x:0")
-    y = graph.get_tensor_by_name("y_true:0")
+    y = graph.get_tensor_by_name("y:0")
 
     # Узнаем сколько/каких классов нужно нам распознать
-    classes = os.listdir(train_path)
+    classes = next(os.walk(train_path))[1]
 
     y_test_images = np.zeros((1, len(classes)))
+
+    name_of_classes = read_json(train_path + '/classes.json')
 
     # ПРЕДСКАЗАНИЕ
     # ----------
@@ -67,7 +70,7 @@ def predict(image):
     result = session.run(y_pred, feed_dict=feed_dict_test)
 
     # Возвращаем какой класс и какая вертоятность что это он
-    return classes[np.argmax(result)], np.amax(result) * 100
+    return name_of_classes[classes[np.argmax(result)]], np.amax(result) * 100
 
 
 def predict_wrapper(path, is_result_to_file, result_path):
@@ -76,7 +79,7 @@ def predict_wrapper(path, is_result_to_file, result_path):
 
     cls, probability = predict(image)
 
-    result = '{0} -> {1} ({2:.3f}%)'.format(path, cls, probability)
+    result = u'{0} -> {1} ({2:.3f}%)'.format(path, cls, probability)
     print(result)
 
     if is_result_to_file:

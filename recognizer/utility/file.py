@@ -16,7 +16,7 @@ def read(path):
 
 
 def write(path, flag, data):
-    file = open(path, flag)
+    file = open(path, flag, encoding="utf-8")
     file.write(data)
     file.close()
 

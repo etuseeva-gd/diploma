@@ -1,6 +1,5 @@
 import cv2
 import os
-import glob
 from sklearn.utils import shuffle
 import numpy as np
 from models.dataset import DataSet
@@ -43,9 +42,15 @@ def load_images(train_path, image_size, classes):
 
     for fields in classes:
         index = classes.index(fields)
-        path = os.path.join(train_path, fields, '*g')
-        files = glob.glob(path)
-        for file_name in files:
+
+        # @todo подумать над этим решением
+        loc_path = train_path + '/' + fields
+       
+        files = os.listdir(loc_path)
+        for file in files:
+            file_name = loc_path + '/' + file
+            # print(file_name)
+
             # Изображения
             image = get_image_by_path(file_name)
             images.append(prepare_image_for_train(image, image_size))
