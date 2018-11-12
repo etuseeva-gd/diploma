@@ -9,6 +9,7 @@ import sys
 from utility.image import prepare_image_for_predict, get_image_by_path, get_image_by_url
 from utility.constants import model_dir, model_name, train_path
 from models.params import Params
+from utility.file import read, write_a, write_w
 
 
 def is_model_exists():
@@ -65,23 +66,40 @@ def predict(image):
     feed_dict_test = {x: x_batch, y: y_test_images}
     result = session.run(y_pred, feed_dict=feed_dict_test)
 
-    print(result)
-
     # Возвращаем какой класс и какая вертоятность что это он
     return classes[np.argmax(result)], np.amax(result) * 100
 
 
-def console_prediction():
-    #  Получаем данные о местоположении файла
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    image_path = sys.argv[1]
-    path = dir_path + '/' + image_path
-
+def predict_wrapper(path, is_result_to_file, result_path):
     # Получаем текущее изображение
     image = get_image_by_path(path)
 
     cls, probability = predict(image)
-    print('Это {0} на {1}%'.format(cls, probability))
+
+    result = '{0} -> {1} ({2:.3f}%)'.format(path, cls, probability)
+    print(result)
+
+    if is_result_to_file:
+        write_a(result_path, result + '\n')
+
+
+def console_prediction():
+    result_path = 'result.txt'
+
+    # Куда выводить результат - в консоль или файл
+    is_result_to_file = sys.argv[1] == '-f'
+
+    #  Получаем данные о местоположении файла
+    path = sys.argv[2]
+
+    write_w(result_path, '')  # очичаем файл с результатом, если он есть
+    if os.path.isdir(path):
+        # Получаем данные по списку изображений
+        files = os.listdir(path)
+        for file in files:
+            predict_wrapper(path + file, is_result_to_file, result_path)
+    else:
+        predict_wrapper(path, is_result_to_file, result_path)
 
 
 def web_prediction(url):

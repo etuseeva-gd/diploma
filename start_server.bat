@@ -1,3 +1,1 @@
-pipenv shell
-cd server
-python server.py
+pipenv run python server/server.py

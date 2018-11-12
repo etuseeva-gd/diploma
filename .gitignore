@@ -1,7 +1,3 @@
-recognizer/testing_data/
-recognizer/training_data/
-recognizer/utility/__pycache__
-recognizer/__pycache__
-recognizer/model/
 example/
 .idea/
+.vscode/
