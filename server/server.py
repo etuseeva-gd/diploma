@@ -87,8 +87,9 @@ class RequestHandler(BaseHTTPRequestHandler):
             report.append({
                 'epoch': p[0],
                 'train_accuracy': p[1],
-                'test_accuracy': p[2],
-                'test_loss': p[3]
+                'train_loss': p[2],
+                'test_accuracy': p[3],
+                'test_loss': p[4]
             })
 
         self.wfile.write(json.dumps({
@@ -151,5 +152,3 @@ if __name__ == '__main__':
 
     server_thread.join()
     train_thread.join()
-
-    # Удалить предыдущий репорт - если он не полноценный

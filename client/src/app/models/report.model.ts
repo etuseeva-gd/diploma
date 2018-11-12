@@ -5,7 +5,10 @@ export interface IReport {
 
 export interface IStatisticPerEpoch {
   epoch: number;
+
   train_accuracy: number;
+  train_loss: number;
+
   test_accuracy: number;
   test_loss: number;
 }

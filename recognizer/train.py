@@ -97,7 +97,10 @@ def train(num_classes, data, params):
             # Номер эпохи
             epoch = int(i / num_batch)
 
-            train_accuracy = session.run(accuracy, feed_dict=feed_dict_train)
+            train_accuracy, train_loss = session.run(
+                [accuracy, cost],
+                feed_dict=feed_dict_train
+            )
 
             x_test_batch, y_test_batch, _, _ = data.test.next_batch(
                 params.train_params.batch_size
@@ -108,15 +111,15 @@ def train(num_classes, data, params):
                 feed_dict=feed_dict_test
             )
 
-            print("Эпоха {0}: Точность обучения = {1:>6.1%}, Точность проверки = {2:>6.1%}, Потеря = {3:.3f}"
-                  .format(epoch + 1, train_accuracy, test_accuracy, test_loss))
+            print("Эпоха {0}: Точность обучения = {1:>6.1%}, Потеря обучения = {2:.3f}, Точность проверки = {3:>6.1%}, Потеря проверки = {4:.3f}"
+                  .format(epoch + 1, train_accuracy, train_loss, test_accuracy, test_loss))
 
             # Сохраняем можель после каждой эпохи
             saver.save(session, model_dir + model_name)
 
             # Записываем все в файл, чтобы потом показать UI
-            write_a(report_path, "{0} {1} {2} {3}\n".format(
-                epoch + 1, train_accuracy, test_accuracy, test_loss))
+            write_a(report_path, "{0} {1} {2} {3} {4}\n".format(
+                epoch + 1, train_accuracy, train_loss, test_accuracy, test_loss))
 
     write_a(report_path, end_flag)
 
