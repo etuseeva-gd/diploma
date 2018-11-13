@@ -1,76 +1,61 @@
 <div class="container-header">
-  <p>Тренировать</p>
+    <p>Тренировать</p>
 </div>
 
 <div class="container-row">
-  <p>Введите настройки обучения:</p>
-  <form *ngIf="trainParams" autocomplete="off" (ngSubmit)="train()">
-    <div class="form-style">
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Learning rate (коэффициент)"
-               [(ngModel)]="trainParams.learning_rate"
-               name="learningRate">
-      </mat-form-field>
+    <p>Введите настройки обучения:</p>
+    <form *ngIf="trainParams" autocomplete="off" (ngSubmit)="train()">
+        <div class="form-style">
+            <mat-form-field class="form-field-style field-width-2">
+                <input matInput placeholder="Learning rate (коэффициент)" [(ngModel)]="trainParams.learning_rate" name="learningRate">
+            </mat-form-field>
 
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Количество итераций обучения (шт)"
-               [(ngModel)]="trainParams.num_iteration"
-               name="numIteration">
-      </mat-form-field>
+            <mat-form-field class="form-field-style field-width-2">
+                <input matInput placeholder="Количество итераций обучения (шт)" [(ngModel)]="trainParams.num_iteration" name="numIteration">
+            </mat-form-field>
 
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Размер обучающейся партии (шт)"
-               [(ngModel)]="trainParams.batch_size"
-               name="batchSize">
-      </mat-form-field>
-    </div>
-  </form>
-  <app-spinner *ngIf="!trainParams"></app-spinner>
+            <mat-form-field class="form-field-style field-width-2">
+                <input matInput placeholder="Размер обучающейся партии (шт)" [(ngModel)]="trainParams.batch_size" name="batchSize">
+            </mat-form-field>
+        </div>
+    </form>
+    <app-spinner *ngIf="!trainParams"></app-spinner>
 </div>
 
 <div class="container-row">
-  <p>Введите параметры сверточной нейронной сети:</p>
-  <form *ngIf="nnParams" autocomplete="off" (ngSubmit)="train()">
-    <div class="form-style" *ngFor="let param of nnParams.layer_params; let i = index">
-      <mat-form-field class="form-field-style field-width-3">
-        <input matInput
-               placeholder="Размер фильтра (filter_size)"
-               [(ngModel)]="param.filter_size"
-               name="filterSize{{i}}">
-      </mat-form-field>
-      <mat-form-field class="form-field-style field-width-3">
-        <input matInput
-               placeholder="Количество фильтров (num_filters)"
-               [(ngModel)]="param.num_filters"
-               name="numFilters{{i}}">
-      </mat-form-field>
+    <p>Введите параметры сверточной нейронной сети:</p>
+    <form *ngIf="nnParams" autocomplete="off" (ngSubmit)="train()">
+        <div class="form-style" *ngFor="let param of nnParams.layer_params; let i = index">
+            <mat-form-field class="form-field-style field-width-3">
+                <input matInput placeholder="Размер фильтра (filter size)" [(ngModel)]="param.filter_size" name="filterSize{{i}}">
+            </mat-form-field>
+            <mat-form-field class="form-field-style field-width-3">
+                <input matInput placeholder="Количество фильтров (number of filters)" [(ngModel)]="param.num_filters" name="numFilters{{i}}">
+            </mat-form-field>
 
-      <div class="form-field-style field-width-3">
-        <button mat-mini-fab (click)="removeLayer(i)">
+            <div class="form-field-style field-width-3">
+                <button mat-mini-fab (click)="removeLayer(i)">
           <mat-icon>delete</mat-icon>
         </button>
-      </div>
-    </div>
+            </div>
+        </div>
 
-    <button mat-mini-fab (click)="addLayer()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </form>
-  <app-spinner *ngIf="!nnParams"></app-spinner>
+        <button color="accent" mat-raised-button (click)="addLayer()">
+          Добавить слой
+        </button>
+    </form>
+    <app-spinner *ngIf="!nnParams"></app-spinner>
 </div>
 
-<div class="container-row">
-  <button mat-raised-button (click)="train()">Тренировать сеть</button>
-  <button mat-raised-button (click)="getReport()">Получить репорт по последнему обучению</button>
+<div class="container-row button-container">
+    <button color="primary" mat-raised-button (click)="train()">Тренировать сеть</button>
+    <button color="primary" mat-raised-button (click)="getReport()">Получить последний отчет</button>
 </div>
 
 <div *ngIf="report" class="container-row charts-container">
-  <h1 *ngIf="isTrainEnded">Обучение завершено!</h1>
-  <h1 *ngIf="!isTrainEnded">Обучение в стадии прогресса</h1>
+    <p *ngIf="isTrainEnded">Обучение завершено!</p>
+    <p *ngIf="!isTrainEnded">Система обучается...</p>
 
-  <app-chart [results]="accuracyResults" [xAxisLabel]="'Эпоха (шт)'" [yAxisLabel]="'Точность (%)'"></app-chart>
-  <app-chart [results]="lossResults" [xAxisLabel]="'Эпоха (шт)'" [yAxisLabel]="'Потеря'"></app-chart>
+    <app-chart [results]="accuracyResults" [xAxisLabel]="'Эпоха'" [yAxisLabel]="'Точность (Accuracy)'"></app-chart>
+    <app-chart [results]="lossResults" [xAxisLabel]="'Эпоха'" [yAxisLabel]="'Потеря (Loss)'"></app-chart>
 </div>

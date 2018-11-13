@@ -1,28 +1,29 @@
 <div class="container-header">
-  <p>Распознать (введите необходимые данные)</p>
+    <p>Распознать (введите необходимые данные)</p>
 </div>
 
 <div class="container-row">
-  <form *ngIf="params" autocomplete="off" (ngSubmit)="predict()">
-    <div class="form-style">
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Путь до изображения (url)"
-               [(ngModel)]="params.url"
-               name="imageHeight"
-               (ngModelChange)="clearResult()">
-      </mat-form-field>
-    </div>
-    <button mat-raised-button>Распознать</button>
-  </form>
+    <form *ngIf="params" autocomplete="off" (ngSubmit)="predict()">
+        <div class="form-style">
+            <mat-form-field class="form-field-style field-width-1">
+                <input matInput placeholder="URL изображения" [(ngModel)]="params.url" name="imageHeight">
+            </mat-form-field>
+        </div>
+        <button mat-raised-button color="primary">Распознать</button>
+    </form>
 </div>
 
-
 <div class="container-row">
-  <app-spinner *ngIf="!result && isRecognized"></app-spinner>
+    <app-spinner *ngIf="isRecognized"></app-spinner>
 
-  <div *ngIf="result">
-    <img [src]="params.url">
-    <h1>Это {{result.cls}} ({{result.probability}}%)</h1>
-  </div>
+    <mat-list role="list" *ngFor="let predict of history">
+        <mat-list-item role="listitem">
+            <p>
+                <img [src]="predict.url" width="40px" height="40px">
+            </p>
+            <p>
+                {{predict.result.cls}} ({{predict.result.probability}}%)
+            </p>
+        </mat-list-item>
+    </mat-list>
 </div>

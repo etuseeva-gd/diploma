@@ -34,10 +34,8 @@ export class ChartComponent {
   // colors
   scheme: any = {
     domain: [
-      'rgb(122, 163, 229)',
-      'rgb(168, 56, 93)',
-      'rgb(162, 126, 168)',
-      'rgb(170, 227, 245)'
+      '#ff4081',
+      '#3f51b5'
     ]
   };
 

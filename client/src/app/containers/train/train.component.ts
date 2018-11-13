@@ -48,19 +48,19 @@ export class TrainComponent implements OnInit {
         // @todo сделать модель для этого
         const results = [
           {
-            name: 'Train Accuracy',
+            name: 'Training accuracy',
             series: []
           },
           {
-            name: 'Test Accuracy',
+            name: 'Testing accuracy',
             series: []
           },
           {
-            name: 'Train Loss',
+            name: 'Training Loss',
             series: []
           },
           {
-            name: 'Test Loss',
+            name: 'Testing Loss',
             series: []
           }
         ];

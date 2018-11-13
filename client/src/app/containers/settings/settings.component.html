@@ -1,34 +1,25 @@
 <div class="container-header">
-  <p>Настройки</p>
+    <p>Настройки</p>
 </div>
 
 <div class="container-row">
-  <form *ngIf="params" autocomplete="off" (ngSubmit)="saveParams()">
-    <div class="form-style">
-      <!--row 1-->
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Высота изображения (px)"
-               [(ngModel)]="params.image_height"
-               name="imageHeight">
-      </mat-form-field>
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Ширина изображения (px)"
-               [(ngModel)]="params.image_width"
-               name="imageWidth">
-      </mat-form-field>
+    <form *ngIf="params" autocomplete="off" (ngSubmit)="saveParams()">
+        <div class="form-style">
+            <!--row 1-->
+            <mat-form-field class="form-field-style field-width-2">
+                <input matInput placeholder="Высота изображения (px)" [(ngModel)]="params.image_height" name="imageHeight">
+            </mat-form-field>
+            <mat-form-field class="form-field-style field-width-2">
+                <input matInput placeholder="Ширина изображения (px)" [(ngModel)]="params.image_width" name="imageWidth">
+            </mat-form-field>
 
-      <!--row 4-->
-      <mat-form-field class="form-field-style field-width-2">
-        <input matInput
-               placeholder="Число каналов изображения"
-               [(ngModel)]="params.num_channels"
-               name="numChannels">
-      </mat-form-field>
-    </div>
+            <!--row 4-->
+            <mat-form-field class="form-field-style field-width-2">
+                <input matInput placeholder="Число каналов изображения" [(ngModel)]="params.num_channels" name="numChannels">
+            </mat-form-field>
+        </div>
 
-    <button mat-raised-button>Сохранить настройки</button>
-  </form>
-  <app-spinner *ngIf="!params"></app-spinner>
+        <button mat-raised-button color="primary">Сохранить настройки</button>
+    </form>
+    <app-spinner *ngIf="!params"></app-spinner>
 </div>

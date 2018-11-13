@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {IPredict} from "../../models/predict.model";
 import {PredictService} from "./predict.service";
-import {IPredictResult} from "../../models/predict-result.model";
 
 @Component({
   selector: 'app-predict',
@@ -11,7 +10,7 @@ import {IPredictResult} from "../../models/predict-result.model";
 export class PredictComponent implements OnInit {
   private params: IPredict;
 
-  private result: IPredictResult = null;
+  public history: any[] = [];
   private isRecognized: boolean = false;
 
   constructor(private predictService: PredictService) {
@@ -22,18 +21,17 @@ export class PredictComponent implements OnInit {
   }
 
   predict() {
-    this.clearResult();
     this.isRecognized = true;
 
     this.predictService
       .predict(this.params)
       .subscribe(result => {
-        this.result = result;
+        this.history.push({
+          url: this.params.url,
+          result
+        });
         this.isRecognized = false;
+        this.params.url = '';
       });
-  }
-
-  clearResult() {
-    this.result = null;
   }
 }

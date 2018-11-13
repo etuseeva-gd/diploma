@@ -1,44 +1,47 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-
 // Сброс стилей
 * {
-  padding: 0;
-  margin: 0;
-
-  box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 // Стили для input
 .form-style {
-  display: flex;
-  flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .form-field-style {
-  padding: 5px 10px 20px 10px;
+    padding: 5px 10px 20px 10px;
 }
 
 .field-width-1 {
-  width: 100%;
+    width: 100%;
 }
 
 .field-width-2 {
-  width: 50%;
+    width: 50%;
 }
 
 .field-width-3 {
-  width: 33.33333333%;
+    width: 33.33333333%;
 }
 
 // Общие стили для всех контейнеров
 .container-header {
-  text-align: center;
-  font-size: 18px;
-  margin-bottom: 20px;
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
 .container-row {
-  p {
-    padding: 10px;
-  }
+    margin: 10px;
+    border: 1px dashed gainsboro;
+    p {
+        padding: 10px;
+    }
+    button {
+        margin: 0 10px 10px 10px;
+    }
 }
