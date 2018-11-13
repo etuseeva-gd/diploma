@@ -84,15 +84,19 @@ def train(num_classes, data, params):
     saver = tf.train.Saver(save_relative_paths=True)
 
     write_w(report_path, '')
-    for i in range(params.train_params.num_iteration):
+    num_batch = int(data.train.num_examples /
+                        params.train_params.batch_size)
+
+    # for i in range(params.train_params.num_iteration):
+    for i in range(num_batch * 100):
         x_batch, y_batch, _, _ = data.train.next_batch(
             params.train_params.batch_size
         )
         feed_dict_train = {x: x_batch, y: y_batch}
         session.run(optimizer, feed_dict=feed_dict_train)
 
-        num_batch = int(data.train.num_examples /
-                        params.train_params.batch_size)
+        # num_batch = int(data.train.num_examples /
+        #                 params.train_params.batch_size)
         if i % num_batch == 0:
             # Номер эпохи
             epoch = int(i / num_batch)

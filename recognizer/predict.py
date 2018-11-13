@@ -70,7 +70,8 @@ def predict(image):
     result = session.run(y_pred, feed_dict=feed_dict_test)
 
     # Возвращаем какой класс и какая вертоятность что это он
-    return name_of_classes[classes[np.argmax(result)]], np.amax(result) * 100
+    cls_id = classes[np.argmax(result)]
+    return name_of_classes[cls_id] + ' (' + cls_id + ')', np.amax(result) * 100
 
 
 def predict_wrapper(path, is_result_to_file, result_path):
