@@ -1,53 +1,61 @@
-##### Recognizer (Распознаватель):
-```
-    /recognizer
-        /models - модели
-            detaset.py - регулирует работу с сетами изображений
-            params.py - содержит классы, которые отвечают за параметры системы
-        /params - параметры системы
-            base.json - базовые параметры (где находятся изображения, их размер и тд)
-            nn.json - параметры слоев сети
-            train.json - параметры для обучения
-        /testing_data - тестовые данные
-            /class_1
-            /class_2
-        /training_data - тренировочные данные
-            /class_1
-            /class_2
-        /utility - папка с вспомогательными модулями
-            constants.py - содержит константы
-            image.py - отвечает за работу с изображениями
-            jsonfile.py - с json файлами
-            network.py - с сетью (позволяет по переданными параметрам ее создать)
-        Dokerfile - конфиг файл с докером
-        predict.py - основной файл для запуска распознавания конкретного изображения
-        train.py - основной файл для запуска создания и тренировки сети
-```
-Чтобы поработать с чисто распознавателем нужно перейти в папку: `  `
+#### Recognizer (Распознаватель)
 
-###### Создание и тренировка сети
-Задать необходимые параметры в ` /recognizer/params/* ` и выполнить:
-``` 
-    python /recognizer/train.py 
+##### Требования для запуска
+1. Python (3 и выше версии)
+2. Зависимости из файла Pipfile, для того чтобы их установить:
+```
+pipenv install
 ```
 
-##### Распознавание изображения
-```  
-    python /recognizer/predict.py path_to_image 
+#### Запуск 
+##### 1. Для тренировки системы (файл train.py):
+Перед стартом нужно чтобы в /recognizer/training_images были изображения разбитые по классам и файл classes.json
+
+Пример:
+
 ```
-###### Пример: 
-``` 
-    python /recognizer/predict.py testing_data/cats/cat.1110.jpg 
+pipenv run python /recognizer/train.py
 ```
 
-##### Client (Клиент)
+##### 2. Для того, чтобы распознать (файл predict.py):
+Имеются два параметра:
+1. flag: "-f" если мы хотим выводить результат в файл и консоль, и "-c" если хотим выводить результат только в консоль
+2. path: до папки с изображениями, которые мы хотим распознать или путь до файла, который мы хотим распознать 
+
 ```
-    cd /client
-    npm start 
+pipenv run python /recognizer/predict flag path
 ```
 
-##### Server (Сервер)
+Пример:
+
+```pipenv run python /recognizer/predict.py -f /recognizer/testing_images```
+
+```pipenv run python /recognizer/predict.py -f /recognizer/testing_images/0_00004.pbm```
+
+
+#### Server (Сервер)
+
+##### Требования для запуска
+Такие же, как и для распознавателя.
+
+#### Запуск 
 ```
-    cd /server
-    python server.py 
+pipenv run python /server/server.py
 ```
+
+#### Client (Клиент)
+
+##### Требования для запуска
+1. NodeJS
+2. Зависимости из файла package.json, для того чтобы их установить:
+```
+cd /client
+npm install
+```
+
+#### Запуск 
+```
+npm start
+```
+
+UI будет расположен по адресу http://localhost:4200
