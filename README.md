@@ -7,7 +7,7 @@
 pipenv install
 ```
 
-#### Запуск 
+##### Запуск 
 ##### 1. Для тренировки системы (файл train.py):
 Перед стартом нужно чтобы в /recognizer/training_images были изображения разбитые по классам и файл classes.json
 
@@ -38,7 +38,7 @@ pipenv run python /recognizer/predict flag path
 ##### Требования для запуска
 Такие же, как и для распознавателя.
 
-#### Запуск 
+##### Запуск 
 ```
 pipenv run python /server/server.py
 ```
@@ -53,7 +53,7 @@ cd /client
 npm install
 ```
 
-#### Запуск 
+##### Запуск 
 ```
 npm start
 ```
