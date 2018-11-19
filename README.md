@@ -59,6 +59,7 @@ npm install
 
 ##### Запуск 
 ```
+cd /client
 npm start
 ```
 
