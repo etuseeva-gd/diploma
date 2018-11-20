@@ -30,11 +30,11 @@ pipenv run python /predict flag path
 ###### Пример запуска:
 
 ```
-pipenv run python /predict.py -f /recognizer/testing_images
+pipenv run python predict.py -f /recognizer/testing_images
 ```
 
 ```
-pipenv run python /predict.py -f /recognizer/testing_images/0_00004.pbm
+pipenv run python predict.py -f /recognizer/testing_images/0_00004.pbm
 ```
 
 В файле ```result.txt``` должна содержаться информация о распознавании.
