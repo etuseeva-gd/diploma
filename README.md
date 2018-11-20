@@ -23,18 +23,21 @@ pipenv run python /recognizer/train.py
 2. path: до папки с изображениями, которые мы хотим распознать или путь до файла, который мы хотим распознать 
 
 ```
-pipenv run python /recognizer/predict flag path
+cd /recognizer
+pipenv run python /predict flag path
 ```
 
 ###### Пример запуска:
 
 ```
-pipenv run python /recognizer/predict.py -f /recognizer/testing_images
+pipenv run python /predict.py -f /recognizer/testing_images
 ```
 
 ```
-pipenv run python /recognizer/predict.py -f /recognizer/testing_images/0_00004.pbm
+pipenv run python /predict.py -f /recognizer/testing_images/0_00004.pbm
 ```
+
+В файле ```result.txt``` должна содержаться информация о распознавании.
 
 
 #### Server (Сервер)
