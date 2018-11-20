@@ -14,7 +14,8 @@ pipenv install
 ###### Пример запуска:
 
 ```
-pipenv run python /recognizer/train.py
+cd /recognizer
+pipenv run python train.py
 ```
 
 ##### 2. Для того, чтобы распознать (файл predict.py):
