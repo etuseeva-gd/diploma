@@ -7,15 +7,15 @@
     <form *ngIf="trainParams" autocomplete="off" (ngSubmit)="train()">
         <div class="form-style">
             <mat-form-field class="form-field-style field-width-2">
-                <input matInput placeholder="Learning rate (коэффициент)" [(ngModel)]="trainParams.learning_rate" name="learningRate">
+                <input matInput placeholder="Скорость обучения (коэффициент)" [(ngModel)]="trainParams.learning_rate" name="learningRate">
             </mat-form-field>
 
             <mat-form-field class="form-field-style field-width-2">
-                <input matInput placeholder="Количество итераций обучения (шт)" [(ngModel)]="trainParams.num_iteration" name="numIteration">
+                <input matInput placeholder="Количество итераций обучения" [(ngModel)]="trainParams.num_iteration" name="numIteration">
             </mat-form-field>
 
             <mat-form-field class="form-field-style field-width-2">
-                <input matInput placeholder="Размер обучающейся партии (шт)" [(ngModel)]="trainParams.batch_size" name="batchSize">
+                <input matInput placeholder="Размер обучающейся партии" [(ngModel)]="trainParams.batch_size" name="batchSize">
             </mat-form-field>
         </div>
     </form>
@@ -27,10 +27,10 @@
     <form *ngIf="nnParams" autocomplete="off" (ngSubmit)="train()">
         <div class="form-style" *ngFor="let param of nnParams.layer_params; let i = index">
             <mat-form-field class="form-field-style field-width-3">
-                <input matInput placeholder="Размер фильтра (filter size)" [(ngModel)]="param.filter_size" name="filterSize{{i}}">
+                <input matInput placeholder="Размер фильтра" [(ngModel)]="param.filter_size" name="filterSize{{i}}">
             </mat-form-field>
             <mat-form-field class="form-field-style field-width-3">
-                <input matInput placeholder="Количество фильтров (number of filters)" [(ngModel)]="param.num_filters" name="numFilters{{i}}">
+                <input matInput placeholder="Количество фильтров" [(ngModel)]="param.num_filters" name="numFilters{{i}}">
             </mat-form-field>
 
             <div class="form-field-style field-width-3">

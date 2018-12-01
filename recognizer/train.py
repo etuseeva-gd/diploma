@@ -7,6 +7,7 @@ import numpy as np
 import os
 from numpy.random import seed
 from tensorflow import set_random_seed
+import sys
 
 from models.params import Params
 
@@ -85,7 +86,7 @@ def train(num_classes, data, params):
 
     write_w(report_path, '')
     num_batch = int(data.train.num_examples /
-                        params.train_params.batch_size)
+                    params.train_params.batch_size)
 
     # for i in range(params.train_params.num_iteration):
     for i in range(num_batch * 100):
@@ -128,7 +129,7 @@ def train(num_classes, data, params):
     write_a(report_path, end_flag)
 
 
-def console_train():
+def console_train(path):
     # Инициализируем наши параметры
     params = Params()
 
@@ -136,12 +137,12 @@ def console_train():
     # ----------
     # Подготавливаем входные данные
     # Классы и их количество, которые хотим в дальнейшмем будем распознавать (пример: 'Цветок', 'Машина')
-    classes = next(os.walk(train_path))[1]
+    classes = next(os.walk(path))[1]
     num_classes = len(classes)
 
     # Подгружаем входные данные для тренировки сети
     data = read_train_sets(
-        train_path,
+        path,
         params.base_params.image_size,
         classes,
         test_size=0.2
@@ -154,4 +155,20 @@ def console_train():
 
 
 if __name__ == '__main__':
-    console_train()
+    try:
+        #  Получаем данные о местоположении директории с обучающими данными
+        path = train_path
+        
+        if len(sys.argv) > 1:
+            path = sys.argv[1]
+
+        if not os.path.exists(path):
+            raise Exception('Директория содержащая обучающие данные отсутствует! ' + path)
+
+        console_train(path)
+    except IndexError as error:
+        print('Поймана ошибка: ' + repr(error))
+        print('Проверьте коректность входных аргументов')
+    except Exception as error:
+        print('Поймана ошибка: ' + repr(error))
+    

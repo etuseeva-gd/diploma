@@ -19,8 +19,7 @@ def is_model_exists():
 
 def predict(image):
     if not is_model_exists():
-        print('В начале обучите данные! Модель не найдена!')
-        return
+        raise Exception('В начале обучите данные! Модель не найдена!')
 
     # Инициализируем наши параметры
     params = Params()
@@ -95,8 +94,10 @@ def console_prediction():
 
     #  Получаем данные о местоположении файла
     path = sys.argv[2]
+    if not os.path.exists(path):
+        raise Exception('Переданный путь отсутствует - '  + path)
 
-    write_w(result_path, '')  # очичаем файл с результатом, если он есть
+    write_w(result_path, '')  # очищаем файл с результатом, если он есть
     if os.path.isdir(path):
         # Получаем данные по списку изображений
         files = os.listdir(path)
@@ -107,13 +108,22 @@ def console_prediction():
 
 
 def web_prediction(url):
-    # Выкачиваем текущее изображение из интернета
-    image = get_image_by_url(url)
-    return predict(image)
+    try:
+         # Выкачиваем текущее изображение из интернета
+        image = get_image_by_url(url)
+        return predict(image)
+    except Exception as error:
+        print('Поймана ошибка: ' + repr(error))
 
 
 if __name__ == '__main__':
-    console_prediction()
+    try:
+        console_prediction()
+    except IndexError as error:
+        print('Поймана ошибка: ' + repr(error))
+        print('Проверьте коректность входных аргументов')
+    except Exception as error:
+        print('Поймана ошибка: ' + repr(error))
 
     # path = 'C:/Users/lenok/Desktop/diploma/recognizer/training_data/dogs/'
     # files = os.listdir(path)

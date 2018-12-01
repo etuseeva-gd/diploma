@@ -25,7 +25,7 @@ pipenv run python train.py
 
 ```
 cd /recognizer
-pipenv run python /predict flag path
+pipenv run python predict.py flag path
 ```
 
 ###### Пример запуска:

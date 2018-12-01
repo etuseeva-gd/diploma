@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ITrainParams } from '../../models/train-params.model';
 import { ILayerParams, INNParams } from '../../models/nn-params.model';
 import { TrainService } from './train.service';
@@ -9,7 +9,9 @@ import { IReport } from "../../models/report.model";
   templateUrl: './train.component.html',
   styleUrls: ['./train.component.scss']
 })
-export class TrainComponent implements OnInit {
+export class TrainComponent implements OnInit, OnDestroy {
+  private _subs = [];
+
   private trainParams: ITrainParams;
   private nnParams: INNParams;
 
@@ -21,24 +23,41 @@ export class TrainComponent implements OnInit {
 
   private isTrainEnded: boolean = false;
 
+  private btnIsDisabled: boolean = false;
+
   constructor(private trainService: TrainService) {
   }
 
   ngOnInit() {
-    this.trainService.getTrainParams().subscribe(params => this.trainParams = params);
-    this.trainService.getNNParams().subscribe(params => this.nnParams = params);
+    const trainSub = this.trainService.getTrainParams().subscribe(params => this.trainParams = params);
+    const nnSub = this.trainService.getNNParams().subscribe(params => this.nnParams = params);
 
-    // this.getReport(); // удалить
+    const id = this.trainService
+      .getReport()
+      .subscribe(report => {
+        this.btnIsDisabled = !report.is_train_ended;
+
+        if (!this.btnIsDisabled) {
+          id.unsubscribe();
+        }
+      });
+
+    this._subs = [trainSub, nnSub, id];
+  }
+
+  ngOnDestroy(): void {
+    this._subs.forEach(s => s.unsubscribe());
   }
 
   train() {
-    this.trainService
+    const trainSub = this.trainService
       .train(this.trainParams, this.nnParams)
       .subscribe(() => this.getReport());
+    this._subs.push(trainSub);
   }
 
   getReport() {
-    this._reportId = this.trainService
+    const id = this.trainService
       .getReport()
       .subscribe(report => {
         this.isTrainEnded = false;
@@ -48,19 +67,19 @@ export class TrainComponent implements OnInit {
         // @todo сделать модель для этого
         const results = [
           {
-            name: 'Training accuracy',
+            name: 'Тренировочная точность',
             series: []
           },
           {
-            name: 'Testing accuracy',
+            name: 'Точность тестирования',
             series: []
           },
           {
-            name: 'Training Loss',
+            name: 'Тренировочная потеря',
             series: []
           },
           {
-            name: 'Testing Loss',
+            name: 'Потеря тестирования',
             series: []
           }
         ];
@@ -100,9 +119,11 @@ export class TrainComponent implements OnInit {
 
         if (report.is_train_ended) {
           this.isTrainEnded = true;
-          this._reportId.unsubscribe();
+          id.unsubscribe();
         }
       });
+
+    this._subs.push(id);
   }
 
   addLayer() {
