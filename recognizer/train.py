@@ -89,15 +89,15 @@ def train(num_classes, data, params):
                     params.train_params.batch_size)
 
     # for i in range(params.train_params.num_iteration):
-    for i in range(num_batch * 100):
+    for i in range(num_batch * 50):
+        print(i)
+
         x_batch, y_batch, _, _ = data.train.next_batch(
             params.train_params.batch_size
         )
         feed_dict_train = {x: x_batch, y: y_batch}
         session.run(optimizer, feed_dict=feed_dict_train)
 
-        # num_batch = int(data.train.num_examples /
-        #                 params.train_params.batch_size)
         if i % num_batch == 0:
             # Номер эпохи
             epoch = int(i / num_batch)
@@ -129,7 +129,7 @@ def train(num_classes, data, params):
     write_a(report_path, end_flag)
 
 
-def console_train(path):
+def console_train(path = train_path):
     # Инициализируем наши параметры
     params = Params()
 

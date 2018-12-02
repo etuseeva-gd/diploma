@@ -2,4 +2,4 @@ testing_data/
 training_data/
 utility/__pycache__
 __pycache__
-model/
+temp/

@@ -71,7 +71,7 @@ export class TrainComponent implements OnInit, OnDestroy {
             series: []
           },
           {
-            name: 'Точность тестирования',
+            name: 'Проверочная точность',
             series: []
           },
           {
@@ -79,7 +79,7 @@ export class TrainComponent implements OnInit, OnDestroy {
             series: []
           },
           {
-            name: 'Потеря тестирования',
+            name: 'Проверочная потеря',
             series: []
           }
         ];

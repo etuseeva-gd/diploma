@@ -15,7 +15,7 @@ import train
 
 from utility.jsonfile import read_json, write_json
 from utility.file import read, write_w
-from utility.constants import nn_params_path, base_params_path, train_params_path, report_path, end_flag, train_path
+from utility.constants import nn_params_path, base_params_path, train_params_path, report_path, end_flag
 
 import threading
 
@@ -143,8 +143,8 @@ def train_watcher():
     global train_in_progress
 
     while True:
-        if train_in_progress:
-            train.console_train(train_path)
+        if train_in_progress:   
+            train.console_train()
             train_in_progress = False
             print('Обучение закончилось')
 
