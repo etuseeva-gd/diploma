@@ -1,0 +1,5 @@
+.\testing_data\glavnay_doroga.PNG -> Главная дорога (00012) (99.927%)
+.\testing_data\krugovoe_dvizenie.png -> Круговое движение (00040) (86.553%)
+.\testing_data\ogranichenie_30.png -> Ограничение скорости 30 км/ч (00001) (39.005%)
+.\testing_data\vezd_zapreshen.PNG -> Движение без остановки запрещено (00014) (98.864%)
+.\testing_data\ystupite_dorogu.PNG -> Уступите дорогу (00013) (99.998%)
