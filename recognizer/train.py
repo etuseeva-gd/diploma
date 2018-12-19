@@ -88,10 +88,8 @@ def train(num_classes, data, params):
     num_batch = int(data.train.num_examples /
                     params.train_params.batch_size)
 
-    # for i in range(params.train_params.num_iteration):
-    for i in range(num_batch * 50):
-        print(i)
-
+    for i in range(params.train_params.num_iteration):
+    # for i in range(num_batch * 50):
         x_batch, y_batch, _, _ = data.train.next_batch(
             params.train_params.batch_size
         )
@@ -116,7 +114,7 @@ def train(num_classes, data, params):
                 feed_dict=feed_dict_test
             )
 
-            print("Эпоха {0}: Точность обучения = {1:>6.1%}, Потеря обучения = {2:.3f}, Точность проверки = {3:>6.1%}, Потеря проверки = {4:.3f}"
+            print("Эпоха {0}: Точность обучения = {1:>6.1%}, Ошибка обучения = {2:.3f}, Точность тестирования = {3:>6.1%}, Ошибка тестирования = {4:.3f}"
                   .format(epoch + 1, train_accuracy, train_loss, test_accuracy, test_loss))
 
             # Сохраняем можель после каждой эпохи

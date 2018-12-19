@@ -57,5 +57,5 @@
     <p *ngIf="!isTrainEnded">Система обучается...</p>
 
     <app-chart [results]="accuracyResults" [xAxisLabel]="'Эпоха'" [yAxisLabel]="'Точность (Accuracy)'"></app-chart>
-    <app-chart [results]="lossResults" [xAxisLabel]="'Эпоха'" [yAxisLabel]="'Потеря (Loss)'"></app-chart>
+    <app-chart [results]="lossResults" [xAxisLabel]="'Эпоха'" [yAxisLabel]="'Ошибка (Loss)'"></app-chart>
 </div>

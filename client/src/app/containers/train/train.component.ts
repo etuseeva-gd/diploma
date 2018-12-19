@@ -67,19 +67,19 @@ export class TrainComponent implements OnInit, OnDestroy {
         // @todo сделать модель для этого
         const results = [
           {
-            name: 'Тренировочная точность',
+            name: 'Точность обучения',
             series: []
           },
           {
-            name: 'Проверочная точность',
+            name: 'Точность проверки',
             series: []
           },
           {
-            name: 'Тренировочная потеря',
+            name: 'Ошибка обучения',
             series: []
           },
           {
-            name: 'Проверочная потеря',
+            name: 'Ошибка тестирования',
             series: []
           }
         ];
